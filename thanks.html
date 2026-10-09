@@ -36,11 +36,13 @@
     top: calc(env(safe-area-inset-top, 0px) + 2rem);
     left: 3.4%;
     margin: 0;
-    font: 700 1.75rem/1 var(--font-logo);
+    display: block;
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
   }
+
+  .logo img { display: block; height: 20px; width: auto; }
 
   main {
     position: absolute;
@@ -88,12 +90,13 @@
   p a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 
   @media (max-width: 600px) {
-    .logo { font-size: 1.4rem; left: 1.25rem; }
+    .logo { left: 1.25rem; }
+    .logo img { height: 17px; }
   }
 </style>
 </head>
 <body>
-  <h2 class="logo">Bolt</h2>
+  <a class="logo" href="index.html" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt" draggable="false"></a>
 
   <main>
     <h1>thanks for <span class="pixel" id="word" tabindex="0" role="text" aria-label="downloading!.">downloading!.</span></h1>
