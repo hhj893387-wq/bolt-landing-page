@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ByteBolt</title>
+  <title>ByteBolt – Free Video Downloader for Windows | Save Videos in HD & 8K</title>
 <meta name="description" content="ByteBolt is a fast video downloader for Windows. Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
 <link rel="canonical" href="https://bytebolt.app/">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -68,6 +68,7 @@
       --fs-small: clamp(14px, 1.1vw, 16px);
 
       --ease: cubic-bezier(.22, .61, .36, 1);
+      --v2: clamp(170px, 30svh, 280px);   /* dock glow height at the final section */
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -143,6 +144,7 @@
       text-decoration: none;
       transition: opacity .4s ease;
     }
+    .logo img { display: block; height: 20px; width: auto; }
     .logo.is-hidden { opacity: 0; pointer-events: none; }   /* the hero has its own big Bolt */
 
     /* ---------- Layout ---------- */
@@ -215,7 +217,7 @@
     .hero__mark {
       position: relative;
       z-index: 0;
-      margin: clamp(8px, 2.5vh, 28px) 0 -0.17em;
+      margin: clamp(8px, 2.5vh, 28px) 0 -0.13em;
       font-family: var(--font-logo);
       font-weight: 700;
       font-size: clamp(72px, 8.9vw, 128px);
@@ -223,6 +225,8 @@
       letter-spacing: -0.02em;
       user-select: none;
     }
+
+    .hero__mark img { display: block; height: .62em; width: auto; max-width: none; }
 
     .hero__video {
       position: relative;
@@ -256,7 +260,7 @@
        arrives (--out goes 0 -> 1). */
     .dock {
       --k: 0;      /* shrink progress, set by JS */
-      --out: 0;    /* hide progress, set by JS */
+      --g: 0;      /* grow progress (0 -> 1 at the final section), set by JS */
       position: fixed;
       z-index: 20;
       left: 0;
@@ -264,14 +268,11 @@
       bottom: 0;
       --v0: clamp(150px, 22svh, 230px);                 /* visible glow height at the start */
       --v1: 124px;                                       /* visible glow height when small (always fits the button) */
-      --v: calc(var(--v0) - var(--k) * (var(--v0) - var(--v1)));
+      --vb: calc(var(--v0) - var(--k) * (var(--v0) - var(--v1)));
+      --v: calc(var(--vb) + var(--g) * (var(--v2) - var(--vb)));   /* grows taller at the final section */
       height: var(--v);
       pointer-events: none;
-      opacity: calc(1 - var(--out));
-      transform: translate3d(0, calc(var(--out) * 40px), 0);
-      visibility: visible;
     }
-    .dock.is-gone { visibility: hidden; }
 
     /* white glowing ellipse at the bottom */
     .dock__glow {
@@ -290,7 +291,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px);
+      bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px + var(--g) * clamp(8px, 2.5svh, 28px));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -445,9 +446,10 @@
       justify-content: center;
       text-align: center;
       gap: 40px;
-      padding: 120px var(--pad-x);
+      padding: 120px var(--pad-x) calc(var(--v2) + 40px);   /* leave room for the grown dock */
     }
     .cta .headline { max-width: 12em; }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -477,7 +479,8 @@
       .how__sticky { position: static; height: auto; min-height: 100svh; padding-top: 110px; padding-bottom: 150px; overflow: visible; }
     }
     @media (max-width: 520px) {
-      .logo { font-size: 22px; top: 16px; }
+      .logo { top: 16px; }
+      .logo img { height: 17px; }
       .tab { padding-left: 14px; }
       .btn { height: 52px; }
     }
@@ -500,7 +503,7 @@
     <img class="bg-cta"  data-i="3" src="assets/cta-bg.png"  alt="" draggable="false">
   </div>
 
-  <a class="logo" href="#top" aria-label="Bolt home">Bolt</a>
+  <a class="logo" href="#top" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt" draggable="false"></a>
 
   <!-- Download dock: stays on screen, shrinks while scrolling, hides at the final CTA section -->
   <div class="dock" aria-label="Download Bolt">
@@ -521,7 +524,7 @@
           Download any video from <span class="pixel">anywhere</span><span class="pixel pixel--dot">.</span>
         </h1>
 
-        <div class="hero__mark" aria-hidden="true">Bolt</div>
+        <div class="hero__mark" aria-hidden="true"><img src="assets/bytebolt.svg" alt="" draggable="false"></div>
 
         <!-- Put your video at assets/demo.mp4 (muted, loops, plays when visible) -->
         <div class="hero__video" data-reveal="scale" style="--d:.15s">
@@ -584,7 +587,7 @@
       <h2 class="headline" data-reveal>
         what are you waiting for just <span class="pixel">download.</span>
       </h2>
-      <a class="btn js-download" href="https://github.com/hhj893387-wq/bolt-landing-page/releases/download/v1.0/Bolt-Setup.exe" data-reveal style="--d:.2s">Download</a>
+
     </section>
 
   </main>
@@ -744,15 +747,14 @@
         /* small logo stays hidden while the hero (with its big Bolt) is on screen */
         if (logo) logo.classList.toggle('is-hidden', sections[0].getBoundingClientRect().bottom > vh * 0.35);
 
-        /* download dock: shrinks over the first ~60% of a screen of scrolling,
-           stays small, and only fades out as the final CTA section slides in */
+        /* download dock: shrinks while scrolling, then grows taller (never fades)
+           as the final CTA section slides in */
         if (dock) {
           var k = smooth(y / (vh * 0.6));
           var ctaTop = ctaSection.getBoundingClientRect().top;
-          var out = smooth((vh * 0.9 - ctaTop) / (vh * 0.4));   /* 0 while CTA is far away, 1 once it fills the screen */
-          dock.style.setProperty('--k', k.toFixed(3));
-          dock.style.setProperty('--out', out.toFixed(3));
-          dock.classList.toggle('is-gone', out >= 0.999);
+          var g = smooth((vh * 0.9 - ctaTop) / (vh * 0.4));   /* 0 while CTA is far away, 1 once it fills the screen */
+          dock.style.setProperty('--k', (k * (1 - g)).toFixed(3));
+          dock.style.setProperty('--g', g.toFixed(3));
         }
 
         /* f[i] = how far the viewport middle has crossed the boundary after section i */
