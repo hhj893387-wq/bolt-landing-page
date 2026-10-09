@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bolt</title>
+  <meta name="description" content="Save videos from any site in seconds with high-speed downloads and no limits on quality.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@700&family=Plus+Jakarta+Sans:wght@500;600&family=VT323&display=swap" rel="stylesheet">
+
+  <!--
+    FILES — put these in an "assets" folder next to this file:
+
+      assets/demo.mp4         Desktop 1   (the video that sits in the video-placeholder)
+      assets/hero-bg.png      Desktop 1   (magicpattern background, exported as it unflipped; the page mirrors it)
+      assets/step-1.png       Desktop 3.1 (paste link screenshot)
+      assets/step-2.png       Desktop 3.2 (choose quality screenshot)
+      assets/step-3.png       Desktop 3.3 (saved screenshot)
+      assets/cta-bg.png       Desktop 4   (javier-garcia background)
+      assets/Bolt-Setup.exe   The installer that the download buttons serve
+
+    Also put thanks.html next to this file: users are sent there after clicking download.
+  -->
+
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    :root {
+      --bg: #000;
+      --text: #fff;
+      --muted: 0.55;
+      --border: #3e3e3e;
+      --panel: #151515;
+      --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+      --font-pixel: "VT323", monospace;
+      --font-logo: "Arimo", Arial, sans-serif;
+      --pad-x: clamp(24px, 5.5vw, 80px);
+
+      /* type scale (smaller than the Figma frames) */
+      --fs-h: clamp(28px, 3.3vw, 44px);
+      --fs-lead: clamp(16px, 1.35vw, 19px);
+      --fs-tab-title: clamp(18px, 1.6vw, 22px);
+      --fs-small: clamp(14px, 1.1vw, 16px);
+
+      --ease: cubic-bezier(.22, .61, .36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Make all text unselectable ---------- */
+    html, body, * {
+      -webkit-user-select: none;   /* Safari / iOS */
+      -moz-user-select: none;      /* older Firefox */
+      user-select: none;
+      -webkit-touch-callout: none; /* stops the iOS long-press menu */
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
+    /* ---------- Fixed background stack (crossfades on scroll) ---------- */
+    .bgs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--bg);
+    }
+    .bgs img {
+      position: absolute;
+      inset: -6% 0;
+      width: 100%;
+      height: 112%;
+      object-fit: cover;
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+    .bgs img:first-child { opacity: 1; }          /* visible before JS runs */
+    .bgs img[data-flip] { transform: scaleX(-1); }
+
+    /* ---------- Scroll progress ---------- */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 60;
+      height: 2px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+    }
+
+    /* ---------- Logo ---------- */
+    .logo {
+      position: fixed;
+      top: 20px;
+      left: clamp(20px, 3.4vw, 49px);
+      z-index: 50;
+      font-family: var(--font-logo);
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--text);
+      text-decoration: none;
+      transition: opacity .4s ease;
+    }
+    .logo.is-hidden { opacity: 0; pointer-events: none; }   /* the hero has its own big Bolt */
+
+    /* ---------- Layout ---------- */
+    main { position: relative; z-index: 1; }
+
+    .section {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow: hidden;
+    }
+
+    .headline {
+      margin: 0;
+      font-weight: 600;
+      font-size: var(--fs-h);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .pixel {
+      font-family: var(--font-pixel);
+      font-weight: 400;
+      font-size: 1.3em;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    /* ---------- Reveal on scroll ---------- */
+    .js [data-reveal] {
+      opacity: 0;
+      transform: translate3d(0, 28px, 0);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+      transition-delay: var(--d, 0s);
+    }
+    .js [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+    }
+    .js [data-reveal="scale"] { transform: translate3d(0, 28px, 0) scale(.97); }
+    .js [data-reveal="scale"].is-visible { transform: none; }
+
+    /* ---------- 1. Hero ---------- */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: clamp(96px, 16svh, 170px) var(--pad-x) 0;
+    }
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero__title {
+      margin: 0;
+      font-weight: 600;
+      font-size: clamp(24px, 2.8vw, 40px);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      text-align: center;
+    }
+    .hero__title .pixel { font-size: 1.6em; }
+    .hero__title .pixel--dot { font-size: 2.4em; line-height: 0; }
+
+    /* big wordmark, partly hidden behind the video */
+    .hero__mark {
+      position: relative;
+      z-index: 0;
+      margin: clamp(8px, 2.5vh, 28px) 0 -0.17em;
+      font-family: var(--font-logo);
+      font-weight: 700;
+      font-size: clamp(72px, 8.9vw, 128px);
+      line-height: .8;
+      letter-spacing: -0.02em;
+      user-select: none;
+    }
+
+    .hero__video {
+      position: relative;
+      z-index: 2;
+      width: min(963px, 100%);
+      aspect-ratio: 963 / 509;
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #9a9a9a 0%, #8c8c8c 100%);   /* shows until the video loads */
+      /* the bottom of the player melts away, so no hard edge is ever visible above the glow */
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 96%);
+              mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 96%);
+    }
+    .hero__video video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero__video::after {            /* soft fade into the glow below */
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent 62%, rgba(232, 228, 212, .55) 100%);
+    }
+
+    /* ---------- Download dock (glow + button) ----------
+       Fixed to the bottom of the screen. It shrinks as you scroll
+       (--k goes 0 -> 1) and only fades out when the final CTA section
+       arrives (--out goes 0 -> 1). */
+    .dock {
+      --k: 0;      /* shrink progress, set by JS */
+      --out: 0;    /* hide progress, set by JS */
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      --v0: clamp(150px, 22svh, 230px);                 /* visible glow height at the start */
+      --v1: 124px;                                       /* visible glow height when small (always fits the button) */
+      --v: calc(var(--v0) - var(--k) * (var(--v0) - var(--v1)));
+      height: var(--v);
+      pointer-events: none;
+      opacity: calc(1 - var(--out));
+      transform: translate3d(0, calc(var(--out) * 40px), 0);
+      visibility: visible;
+    }
+    .dock.is-gone { visibility: hidden; }
+
+    /* white glowing ellipse at the bottom */
+    .dock__glow {
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--v) * -1);
+      width: calc(120vw - var(--k) * 30vw);
+      height: calc(var(--v) * 2);
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: linear-gradient(180deg, #d5d4d4 0%, #f4f4f2 35%, #cfcfcf 80%);
+      box-shadow: 0 -14px 50px 6px rgba(23, 23, 23, 0.55), 0 -2px 18px rgba(255, 255, 255, .8);
+    }
+
+    .dock__cta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding: 0 var(--pad-x);
+      transform: scale(calc(1 - var(--k) * 0.15));
+      transform-origin: 50% 100%;
+    }
+    .dock__cta .btn { pointer-events: auto; }
+    .dock__note {
+      margin: calc(14px * (1 - var(--k))) 0 0;
+      font-size: var(--fs-small);
+      color: rgba(0, 0, 0, .6);
+      max-height: calc(30px * (1 - var(--k)));   /* collapses as it shrinks */
+      opacity: calc(1 - var(--k) * 1.6);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* ---------- 2. Speed ---------- */
+    .speed {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px var(--pad-x);
+    }
+    .speed .headline { max-width: 12em; }
+    .speed__text {
+      margin: 20px 0 0;
+      max-width: 30em;
+      font-size: var(--fs-lead);
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    /* ---------- 3. How to download (vertical tabs) ---------- */
+    .how {
+      --how-scroll: 220svh;            /* how much scrolling the 3 steps take */
+      height: calc(100vh + var(--how-scroll));
+      height: calc(100svh + var(--how-scroll));
+      overflow: visible;               /* needed so the inner block can stick */
+    }
+    .how__sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      padding: 96px var(--pad-x) 130px;   /* extra bottom room for the docked button */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(24px, 5vh, 64px);
+      overflow: hidden;
+    }
+    .how__title { text-align: center; }
+
+    .tabs {
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: minmax(280px, 460px) 1fr;
+      gap: clamp(28px, 4.5vw, 72px);
+      align-items: start;
+    }
+
+    .tablist { display: flex; flex-direction: column; gap: 16px; }
+
+    .tab {
+      all: unset;
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      cursor: pointer;
+      padding: 2px 0 2px 20px;
+      border-left: 1px solid rgba(255, 255, 255, 0.25);
+      opacity: var(--muted);
+      transition: opacity .35s ease;
+      -webkit-user-select: none;   /* "all: unset" resets user-select, so set it again */
+      user-select: none;
+    }
+    /* white line that fills as you scroll through the step */
+    .tab::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #fff;
+      transform: scaleY(var(--fill, 0));
+      transform-origin: top;
+    }
+    .tab:hover { opacity: 0.85; }
+    .tab:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+    .tab[aria-selected="true"] { opacity: 1; }
+    html:not(.js) .tab[aria-selected="true"] { border-left-color: #fff; }
+
+    .tab__num {
+      display: block;
+      font-size: var(--fs-small);
+      line-height: 1.2;
+      letter-spacing: 0.14em;
+    }
+    .tab__title {
+      display: block;
+      margin-top: 2px;
+      font-size: var(--fs-tab-title);
+      line-height: 1.35;
+    }
+    .tab__body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .4s var(--ease);
+    }
+    .tab[aria-selected="true"] .tab__body { grid-template-rows: 1fr; }
+    .tab__body > p {
+      overflow: hidden;
+      margin: 0;
+      font-size: var(--fs-small);
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .tab[aria-selected="true"] .tab__body > p { padding-top: 10px; }
+
+    .tabs__stage {
+      position: relative;
+      aspect-ratio: 651 / 435;
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .tabs__stage img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.03);
+      transition: opacity .5s ease, transform .7s var(--ease);
+    }
+    .tabs__stage img.is-active { opacity: 1; transform: none; }
+
+    /* ---------- 4. Call to action ---------- */
+    .cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 40px;
+      padding: 120px var(--pad-x);
+    }
+    .cta .headline { max-width: 12em; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: min(300px, 100%);
+      height: 56px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 17px;
+      text-decoration: none;
+      transition: transform .25s var(--ease), background .25s ease, opacity .9s var(--ease);
+    }
+    .btn:hover { transform: translateY(-2px); background: #e9e9e9; }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+    .btn--dark { background: #000; color: #fff; }
+    .btn--dark:hover { background: #1c1c1c; }
+    .btn--dark:focus-visible { outline-color: #000; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .tabs { grid-template-columns: 1fr; }
+      /* small screens: no pinning, tabs are tapped instead */
+      .how { height: auto; overflow: hidden; }
+      .how__sticky { position: static; height: auto; min-height: 100svh; padding-top: 110px; padding-bottom: 150px; overflow: visible; }
+    }
+    @media (max-width: 520px) {
+      .logo { font-size: 22px; top: 16px; }
+      .tab { padding-left: 14px; }
+      .btn { height: 52px; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+      .js [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress" aria-hidden="true"></div>
+
+  <!-- Fixed backgrounds (hero + final section only). data-i = index of the section it belongs to. -->
+  <div class="bgs" aria-hidden="true">
+    <img class="bg-hero" data-i="0" data-flip src="assets/hero-bg.png" alt="" draggable="false">
+    <img class="bg-cta"  data-i="3" src="assets/cta-bg.png"  alt="" draggable="false">
+  </div>
+
+  <a class="logo" href="#top" aria-label="Bolt home">Bolt</a>
+
+  <!-- Download dock: stays on screen, shrinks while scrolling, hides at the final CTA section -->
+  <div class="dock" aria-label="Download Bolt">
+    <div class="dock__glow" aria-hidden="true"></div>
+    <div class="dock__cta">
+      <a class="btn btn--dark js-download" href="assets/Bolt-Setup.exe" download="Bolt-Setup.exe">Download Bolt</a>
+      <p class="dock__note">Available for macOS and Windows</p>
+    </div>
+  </div>
+
+  <main id="top">
+
+    <!-- 1. Hero -->
+    <section class="section hero" data-bg>
+      <div class="hero__inner">
+        <h1 class="hero__title" data-reveal>
+          Download any video from <span class="pixel">anywhere</span><span class="pixel pixel--dot">.</span>
+        </h1>
+
+        <div class="hero__mark" aria-hidden="true">Bolt</div>
+
+        <!-- Put your video at assets/demo.mp4 (muted, loops, plays when visible) -->
+        <div class="hero__video" data-reveal="scale" style="--d:.15s">
+          <video autoplay muted loop playsinline preload="metadata" aria-label="Bolt demo video">
+            <source src="assets/demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Speed -->
+    <section class="section speed" data-bg>
+      <h2 class="headline" data-reveal>
+        Download videos with high <span class="pixel">speeds.</span>
+      </h2>
+      <p class="speed__text" data-reveal style="--d:.15s">
+        Save videos from any site in seconds with high-speed downloads and no limits on quality.
+      </p>
+    </section>
+
+    <!-- 3. How to download -->
+    <section class="section how" id="how" data-bg>
+     <div class="how__sticky">
+      <h2 class="headline how__title" data-reveal>how to download <span class="pixel">videos</span></h2>
+
+      <div class="tabs" data-reveal="scale" style="--d:.15s">
+        <div class="tablist" role="tablist" aria-orientation="vertical" aria-label="How to download">
+
+          <button class="tab" role="tab" id="tab-1" aria-controls="shot-1" aria-selected="true" data-step="1">
+            <span class="tab__num">01</span>
+            <span class="tab__title">Paste any video link to download it.</span>
+            <span class="tab__body"><p>Paste any link that has a video on it and it will download it. It works with social media sites, video sites, and any other page with an embedded video. Just copy the URL from your browser, paste it into the URL field.</p></span>
+          </button>
+
+          <button class="tab" role="tab" id="tab-2" aria-controls="shot-2" aria-selected="false" data-step="2" tabindex="-1">
+            <span class="tab__num">02</span>
+            <span class="tab__title">Choose your quality.</span>
+            <span class="tab__body"><p>Choose any quality the video supports, even 8K HD or higher. You can also select the video format and more.</p></span>
+          </button>
+
+          <button class="tab" role="tab" id="tab-3" aria-controls="shot-3" aria-selected="false" data-step="3" tabindex="-1">
+            <span class="tab__num">03</span>
+            <span class="tab__title">Download done.</span>
+            <span class="tab__body"><p>Your download has completed successfully. The file is now saved and ready to play.</p></span>
+          </button>
+
+        </div>
+
+        <div class="tabs__stage">
+          <img id="shot-1" class="is-active" src="assets/step-1.png" alt="Pasting a video link into Bolt" draggable="false">
+          <img id="shot-2" src="assets/step-2.png" alt="Choosing video quality and format in Bolt" draggable="false">
+          <img id="shot-3" src="assets/step-3.png" alt="Bolt showing the video saved" draggable="false">
+        </div>
+      </div>
+     </div>
+    </section>
+
+    <!-- 4. Call to action -->
+    <section class="section cta" id="download" data-bg>
+      <h2 class="headline" data-reveal>
+        what are you waiting for just <span class="pixel">download.</span>
+      </h2>
+      <a class="btn js-download" href="assets/Bolt-Setup.exe" download="Bolt-Setup.exe" data-reveal style="--d:.2s">Download</a>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- Block selecting, copying and right-click menu ---------- */
+      document.addEventListener('selectstart', function (e) { e.preventDefault(); });
+      document.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+      /* ---------- Download the .exe, then go to thanks.html ---------- */
+      Array.prototype.slice.call(document.querySelectorAll('.js-download')).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          /* the link's own "download" attribute starts the file; redirect shortly after */
+          window.setTimeout(function () { window.location.href = 'thanks.html'; }, 1000);
+        });
+      });
+
+      /* ---------- Hero video: play only while visible ---------- */
+      var heroVideo = document.querySelector('.hero__video video');
+      if (heroVideo) {
+        if (reduceMotion) {
+          heroVideo.removeAttribute('autoplay');
+          heroVideo.pause();
+          heroVideo.controls = true;
+        } else if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                var playing = heroVideo.play();
+                if (playing && playing.catch) playing.catch(function () {});
+              } else {
+                heroVideo.pause();
+              }
+            });
+          }, { threshold: 0.15 }).observe(heroVideo);
+        }
+      }
+
+      /* ---------- Tabs ---------- */
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+      var shots = Array.prototype.slice.call(document.querySelectorAll('.tabs__stage img'));
+
+      function select(index, focus) {
+        tabs.forEach(function (tab, i) {
+          var on = i === index;
+          tab.setAttribute('aria-selected', on ? 'true' : 'false');
+          tab.tabIndex = on ? 0 : -1;
+          shots[i].classList.toggle('is-active', on);
+        });
+        if (focus) tabs[index].focus();
+      }
+
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { goToStep(i, false); });
+        tab.addEventListener('keydown', function (e) {
+          var next = null;
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+          if (e.key === 'Home') next = 0;
+          if (e.key === 'End') next = tabs.length - 1;
+          if (next !== null) { e.preventDefault(); goToStep(next, true); }
+        });
+      });
+
+      /* ---------- Scroll-driven steps ---------- */
+      var how = document.getElementById('how');
+      var narrow = window.matchMedia('(max-width: 900px)');
+      var current = 0;
+      var lockUntil = 0;   /* ignore scroll-driven changes briefly after a tab click */
+
+      function howMetrics() {
+        var rect = how.getBoundingClientRect();
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        return { rect: rect, dist: how.offsetHeight - window.innerHeight, top: rect.top + y };
+      }
+
+      function setFills(active, local) {
+        tabs.forEach(function (tab, i) {
+          var fill = i < active ? 1 : (i > active ? 0 : local);
+          tab.style.setProperty('--fill', fill.toFixed(3));
+        });
+      }
+
+      function updateHowScroll() {
+        if (narrow.matches) {
+          setFills(current, 1);
+          return;
+        }
+        var m = howMetrics();
+        var n = tabs.length;
+        var p = m.dist > 0 ? Math.min(1, Math.max(0, -m.rect.top / m.dist)) : 0;
+        var scaled = p * n;
+        var idx = Math.min(n - 1, Math.floor(scaled));
+
+        if (performance.now() > lockUntil && idx !== current) {
+          current = idx;
+          select(idx, false);
+        }
+        setFills(current, Math.min(1, Math.max(0, scaled - current)));
+      }
+
+      function goToStep(i, focus) {
+        select(i, focus);
+        current = i;
+        if (narrow.matches) { updateHowScroll(); return; }
+        var m = howMetrics();
+        lockUntil = performance.now() + 900;
+        window.scrollTo({
+          top: m.top + m.dist * (i + 0.5) / tabs.length,
+          behavior: reduceMotion ? 'auto' : 'smooth'
+        });
+        window.setTimeout(onScroll, 950);
+      }
+
+      /* ---------- Reveal on scroll ---------- */
+      var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+      if ('IntersectionObserver' in window && !reduceMotion) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+        revealEls.forEach(function (el) { io.observe(el); });
+      } else {
+        revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+      }
+
+      /* ---------- Background crossfade + parallax + progress + dock ---------- */
+      var sections = Array.prototype.slice.call(document.querySelectorAll('[data-bg]'));
+      var bgs = Array.prototype.slice.call(document.querySelectorAll('.bgs img'));
+      var bar = document.querySelector('.progress');
+      var logo = document.querySelector('.logo');
+      var dock = document.querySelector('.dock');
+      var ctaSection = document.getElementById('download');
+      var ticking = false;
+
+      function smooth(t) {
+        t = Math.max(0, Math.min(1, t));
+        return t * t * (3 - 2 * t);
+      }
+
+      function update() {
+        ticking = false;
+        var vh = window.innerHeight;
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        var docH = document.documentElement.scrollHeight - vh;
+
+        if (bar) bar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, y / docH) : 0) + ')';
+        updateHowScroll();
+
+        /* small logo stays hidden while the hero (with its big Bolt) is on screen */
+        if (logo) logo.classList.toggle('is-hidden', sections[0].getBoundingClientRect().bottom > vh * 0.35);
+
+        /* download dock: shrinks over the first ~60% of a screen of scrolling,
+           stays small, and only fades out as the final CTA section slides in */
+        if (dock) {
+          var k = smooth(y / (vh * 0.6));
+          var ctaTop = ctaSection.getBoundingClientRect().top;
+          var out = smooth((vh * 0.9 - ctaTop) / (vh * 0.4));   /* 0 while CTA is far away, 1 once it fills the screen */
+          dock.style.setProperty('--k', k.toFixed(3));
+          dock.style.setProperty('--out', out.toFixed(3));
+          dock.classList.toggle('is-gone', out >= 0.999);
+        }
+
+        /* f[i] = how far the viewport middle has crossed the boundary after section i */
+        var mid = vh * 0.5;
+        var zone = vh * 0.3;
+        var f = sections.map(function (s, i) {
+          if (i === sections.length - 1) return 0;
+          var boundary = s.getBoundingClientRect().bottom;
+          return smooth((mid - boundary + zone) / (2 * zone));
+        });
+
+        bgs.forEach(function (img) {
+          var i = parseInt(img.getAttribute('data-i'), 10);
+          var prev = i === 0 ? 1 : f[i - 1];
+          var op = prev * (1 - f[i]);
+          img.style.opacity = op.toFixed(3);
+          if (!reduceMotion) {
+            /* shift stays within ±5% of the viewport height (images are 6% oversized top and bottom) */
+            var p = docH > 0 ? Math.min(1, Math.max(0, y / docH)) : 0;
+            img.style.transform = 'translate3d(0,' + ((0.5 - p) * vh * 0.1).toFixed(1) + 'px,0)' +
+              (img.hasAttribute('data-flip') ? ' scaleX(-1)' : '');
+          }
+        });
+      }
+
+      function onScroll() {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(update);
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      window.addEventListener('load', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

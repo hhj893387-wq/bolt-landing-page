@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thanks for downloading – Bolt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --font-pixel: "VT323", monospace;
+    --font-logo: "Arimo", Arial, sans-serif;
+    --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+    --bg: #121212;
+    --text: #ffffff;
+    --muted: #8c8c8c;
+  }
+  html, body { height: 100%; margin: 0; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    color: var(--text);
+    font-family: var(--font-body);
+    background: var(--bg) url("assets/cta-bg.png") center / cover no-repeat;
+  }
+
+  .logo {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 2rem);
+    left: 3.4%;
+    margin: 0;
+    font: 700 1.75rem/1 var(--font-logo);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  main {
+    position: absolute;
+    left: 0; right: 0; top: 44%;
+    transform: translateY(-50%);
+    padding: 0 1.25rem;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 500;
+    font-size: clamp(2.1rem, 5.6vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -.03em;
+  }
+  h1 .pixel {
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    font-size: 1.3em; /* VT323 renders small, so scale it up to match */
+    letter-spacing: 0;
+    margin-left: .1em;
+    display: inline-block;
+    cursor: default;
+    border-radius: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 .pixel:focus-visible { outline: 2px solid var(--text); outline-offset: 6px; }
+
+  /* Outer span is a static hit area; inner span is what rotates */
+  .ch { display: inline-block; }
+  .ch .in {
+    display: inline-block;
+    pointer-events: none;
+    will-change: transform, color;
+    transform-origin: 50% 55%;
+  }
+
+  p {
+    margin: 1.1rem 0 0;
+    font-size: clamp(.9rem, 1.45vw, 1.3rem);
+    color: var(--muted);
+  }
+  p a { color: var(--text); font-weight: 500; text-decoration: none; border-radius: 2px; }
+  p a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  p a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+
+  @media (max-width: 600px) {
+    .logo { font-size: 1.4rem; left: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+  <h2 class="logo">Bolt</h2>
+
+  <main>
+    <h1>thanks for <span class="pixel" id="word" tabindex="0" role="text" aria-label="downloading!.">downloading!.</span></h1>
+    <p>Your download will start automatically. if it doesn’t, click <a href="assets/bolt-setup.exe" download="bolt-setup.exe" id="manual">here</a> to start manually</p>
+  </main>
+
+  <script>
+    (function () {
+      var word = document.getElementById("word");
+      var text = word.textContent;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var SPEED = reduce ? 0 : 320;      // degrees per second while hovered
+      var letters = [];
+      var running = false, last = 0, clock = 0;
+
+      word.textContent = "";
+      Array.from(text).forEach(function (ch, i) {
+        var outer = document.createElement("span");
+        outer.className = "ch";
+        outer.setAttribute("aria-hidden", "true");
+        var inner = document.createElement("span");
+        inner.className = "in";
+        inner.textContent = ch;
+        outer.appendChild(inner);
+        word.appendChild(outer);
+
+        var L = { inner: inner, hue: i * 47, angle: 0, vel: 0, target: 0,
+                  mix: 0, hot: false, sticky: false, settling: false };
+        letters.push(L);
+
+        function set(on) {
+          var hot = on || L.sticky;
+          if (hot === L.hot) return;
+          L.hot = hot;
+          if (!hot) {
+            // glide forward to the next upright position instead of snapping back
+            L.target = Math.ceil((L.angle + L.vel * 0.3) / 360) * 360;
+            L.settling = true;
+          } else {
+            L.settling = false;
+          }
+          start();
+        }
+        outer.addEventListener("pointerenter", function (e) { if (e.pointerType !== "touch") set(true); });
+        outer.addEventListener("pointerleave", function (e) { if (e.pointerType !== "touch") set(false); });
+        outer.addEventListener("pointerdown", function (e) {
+          if (e.pointerType === "touch") { L.sticky = !L.sticky; set(L.sticky); }
+        });
+        L.set = set;
+      });
+
+      // Keyboard: focusing the word spins every letter
+      word.addEventListener("focus", function () { if (word.matches(":focus-visible")) letters.forEach(function (L) { L.set(true); }); });
+      word.addEventListener("blur", function () { letters.forEach(function (L) { L.sticky = false; L.set(false); }); });
+
+      function start() {
+        if (running) return;
+        running = true; last = performance.now();
+        requestAnimationFrame(tick);
+      }
+
+      function tick(now) {
+        var dt = Math.min(0.05, (now - last) / 1000);
+        last = now; clock += dt;
+        var busy = false;
+
+        letters.forEach(function (L) {
+          if (L.hot) {
+            L.vel += (SPEED - L.vel) * Math.min(1, dt * 5);   // ease up to speed
+            L.angle += L.vel * dt;
+          } else if (L.settling) {
+            // damped spring toward the upright target: smooth, no snap
+            var acc = (L.target - L.angle) * 55 - L.vel * 13;
+            L.vel += acc * dt;
+            L.angle += L.vel * dt;
+            if (Math.abs(L.target - L.angle) < 0.2 && Math.abs(L.vel) < 1 && L.mix < 0.005) {
+              L.angle = L.vel = 0; L.target = 0; L.settling = false;
+            }
+          }
+          L.mix += ((L.hot ? 1 : 0) - L.mix) * Math.min(1, dt * 7);   // colour morphs in and out
+          if (!L.hot && L.mix < 0.005) L.mix = 0;
+
+          var hue = (L.hue + clock * 140) % 360;                       // rainbow keeps cycling
+          var scale = 1 + 0.22 * L.mix;
+          L.inner.style.transform = "rotate(" + L.angle.toFixed(2) + "deg) scale(" + scale.toFixed(3) + ")";
+          L.inner.style.color = L.mix > 0
+            ? "color-mix(in srgb, hsl(" + hue.toFixed(0) + " 100% 62%) " + (L.mix * 100).toFixed(1) + "%, #fff)"
+            : "";
+          if (L.hot || L.settling || L.mix > 0) busy = true;
+        });
+
+        if (busy) requestAnimationFrame(tick); else running = false;
+      }
+    })();
+  </script>
+</body>
+</html>
