@@ -252,16 +252,16 @@
 
     /* white glowing ellipse at the bottom */
     .dock__glow {
-      position: absolute;
-      left: 50%;
-      bottom: calc(var(--v) * -1);
-      width: calc(120vw - var(--k) * 30vw);
-      height: calc(var(--v) * 2);
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: linear-gradient(180deg, #d5d4d4 0%, #f4f4f2 35%, #cfcfcf 80%);
-      box-shadow: 0 -14px 50px 6px rgba(23, 23, 23, 0.55), 0 -2px 18px rgba(255, 255, 255, .8);
-    }
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--v) * -1);
+  width: 120vw;                         /* was: calc(120vw - var(--k) * 30vw) */
+  height: calc(var(--v) * 2);           /* still shrinks via --v */
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #1f1e1e 0%, #090909 35%, #3e3e3e 80%);
+  box-shadow: 0 -14px 50px 6px rgba(23, 23, 23, 0.55), 0 -2px 18px rgba(37, 37, 37, 0.8);
+}
 
     .dock__cta {
       position: absolute;
@@ -280,7 +280,7 @@
     .dock__note {
       margin: calc(14px * (1 - var(--k))) 0 0;
       font-size: var(--fs-small);
-      color: rgba(0, 0, 0, .6);
+      color: rgba(234, 233, 233, 0.6);
       max-height: calc(30px * (1 - var(--k)));   /* collapses as it shrinks */
       opacity: calc(1 - var(--k) * 1.6);
       overflow: hidden;
@@ -442,8 +442,8 @@
     }
     .btn:hover { transform: translateY(-2px); background: #e9e9e9; }
     .btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-    .btn--dark { background: #000; color: #fff; }
-    .btn--dark:hover { background: #1c1c1c; }
+    .btn--dark { background: #fff; color: #000; }
+    .btn--dark:hover { background: #e5e5e5; }
     .btn--dark:focus-visible { outline-color: #000; }
 
     /* ---------- Responsive ---------- */
