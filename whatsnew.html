@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Release Notes</title>
+  <meta name="description" content="What's new in ByteBolt.">
+  <meta name="theme-color" content="#000000">
+
+  <script>
+  (function () {
+    var h = location.hash;
+    if (!h || h === "#") h = "#/";
+    history.replaceState(null, "", location.pathname.replace(/whatsnew(\.html)?$/, "") + location.search + h);
+  })();
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/bolt.png">
+  <style>
+:root {
+  --bg: #000000;
+  --surface: #0d0d0d;
+  --surface-2: #171717;
+  --line: #232323;
+  --line-2: #3a3a3a;
+  --text: #ffffff;
+  --text-2: #b5b5b5;
+  --text-3: #787878;
+  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "VT323", "Consolas", monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+.ico { flex: none; display: block; }
+i[data-icon] { display: inline-flex; font-style: normal; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Page loader (fades out in 0.3s) ---------- */
+.loader {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-items: center;
+  background: var(--bg);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.loader.done { opacity: 0; pointer-events: none; }
+
+/* ---------- Top bar ---------- */
+.top {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+.top-right { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
+.brand img { height: 26px; width: auto; display: block; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: inherit; font-size: 14px; font-weight: 700;
+  border: 1px solid var(--text); background: var(--text); color: var(--bg);
+  padding: 9px 16px; border-radius: 12px; cursor: pointer; text-decoration: none;
+  transition: opacity 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+}
+.btn:hover { opacity: 0.85; }
+.btn:active { transform: scale(0.98); }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--line-2); }
+.btn.ghost:hover { background: var(--surface-2); opacity: 1; }
+.btn.danger:hover { background: var(--text); color: var(--bg); }
+.btn.sm { padding: 6px 12px; font-size: 13px; }
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+.dl-float{
+  position:fixed;
+  top:16px;
+  right:24px;
+  z-index:60;
+}
+/* ---------- Hero banner ---------- */
+.hero {
+  position: relative; overflow: hidden; background: #000;
+  height: clamp(350px, 46vw, 430px);
+  isolation: isolate;
+}
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 80%, #000 100%); z-index: 1; pointer-events: none; }
+.hero-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; color: var(--text); display: flex; align-items: center; gap: 14px; }
+.eyebrow .upd { color: var(--text-3); }
+h1.hero-title {
+  font-size: clamp(38px, 6.2vw, 96px); line-height: 1.08; letter-spacing: -0.035em; font-weight: 600;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.1em; margin-top: 4px;
+}
+h1.hero-title img { height: 1em; width: auto; display: block; }
+
+/* ---------- Dock ---------- */
+.dock {
+  position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 40;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: color-mix(in srgb, #0d0d0d 85%, transparent); backdrop-filter: blur(14px);
+  border: 0; border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.dock a {
+  display: inline-flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: 8px; text-decoration: none; transition: background .2s, opacity .2s, transform .15s;
+}
+.dock a:active { transform: scale(.97); }
+.dock-icon { width: 44px}
+
+.dock-icon img { width: 20px; height: 20px; display: block; }
+.dock-new { flex: 1; min-width: 190px; padding: 0 22px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; opacity: .6; }
+.dock-new:hover { opacity: 1; }
+
+/* ---------- Layout: sidebar + releases ---------- */
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px; padding-top: 72px; padding-bottom: 120px; align-items: start; }
+
+.side { position: sticky; top: 96px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none; }
+.side::-webkit-scrollbar { display: none; }
+.yr { margin-bottom: 14px; }
+.yr-btn {
+  font: inherit; font-size: 20px; font-weight: 500; color: var(--text); background: none; border: 0; padding: 0;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; letter-spacing: -0.01em;
+}
+.yr-btn svg { transition: transform 0.3s var(--ease); }
+.yr[data-open="false"] .yr-btn svg { transform: rotate(180deg); }
+.months { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s var(--ease); }
+.yr[data-open="true"] .months { grid-template-rows: 1fr; }
+.months-in { overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding-top: 6px; }
+.mo {
+  font: inherit; font-size: 15px; color: var(--text-3); background: none; border: 0; padding: 4px 0;
+  cursor: pointer; text-align: left; transition: color 0.2s;
+}
+.mo:hover { color: var(--text-2); }
+.mo.on { color: var(--text); }
+
+.release { padding: 0 0 72px; opacity: 0; transform: translateY(10px); animation: rise 0.55s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 60ms); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+.month { scroll-margin-top: 90px; }
+.month + .month { margin-top: 0; }
+
+.rel-date { display: block; font-size: 16px; color: var(--text-3); letter-spacing: -0.01em; }
+.rel-title { font-size: clamp(20px, 5vw, 64px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.08; margin: 6px 0 14px; }
+.rel-title a { text-decoration: none; }
+.rel-title a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.rel-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.ver {
+  display: inline-flex; align-items: center; font-size: 15px; font-weight: 600; color: var(--text);
+  border: 1px solid var(--line-2); border-radius: 12px; padding: 6px 12px; line-height: 1.2;
+}
+.tag { font-family: var(--mono); font-size: 20px; letter-spacing: 0.04em; color: var(--text-3); }
+.tag-breaking { color: var(--text); text-decoration: underline wavy; text-underline-offset: 4px; }
+
+.body { color: var(--text); max-width: 62ch; font-size: 16px; line-height: 1.55; }
+.body p + p, .body ul + p, .body p + ul, .body h4 + p, .body p + h4, .body ul + h4, .body img + h4, .body img + p { margin-top: 10px; }
+.body h4 { font-size: 20px; font-weight: 400; letter-spacing: -0.015em; margin-top: 30px; line-height: 1.3; }
+.body h4:first-child { margin-top: 0; }
+.body > p:not(:first-child), .body li { color: var(--text-2); }
+.body ul { list-style: none; padding: 0; margin-top: 10px; }
+.body li { position: relative; padding-left: 18px; margin: 5px 0; }
+.body li::before { content: ""; position: absolute; left: 2px; top: 0.7em; width: 5px; height: 5px; background: var(--text-3); border-radius: 50%; }
+.body code { font-family: var(--mono); font-size: 1.15em; background: var(--surface-2); padding: 0 6px; border-radius: 6px; }
+.body strong { color: var(--text); }
+.body a { text-decoration: underline; text-underline-offset: 3px; }
+.body img {
+  display: block; width: 100%; max-width: 420px; height: auto; margin-top: 14px;
+  border-radius: 12px; border: 1px solid var(--line);
+}
+
+.back { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-3); text-decoration: none; margin-bottom: 28px; transition: color .2s; }
+.back:hover { color: var(--text); }
+.layout.detail { grid-template-columns: minmax(0, 1fr); padding-top: 48px; }
+.layout.detail .side { display: none; }
+
+/* ---------- States ---------- */
+.state { text-align: center; padding: 72px 0 120px; color: var(--text-2); }
+.state h3 { color: var(--text); margin: 14px 0 4px; font-size: 18px; }
+.state-ico { width: 40px; height: 40px; margin: 0 auto; color: var(--text-3); }
+.spinner {
+  width: 26px; height: 26px; margin: 0 auto; border-radius: 50%;
+  border: 2px solid var(--line-2); border-top-color: var(--text); animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.foot { border-top: 1px solid var(--line); padding: 28px 0 100px; color: var(--text-3); font-size: 13px; }
+.foot .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--text); }
+
+/* ---------- Admin ---------- */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.login { max-width: 400px; margin: 12vh auto 0; }
+.login h1 { font-size: 30px; letter-spacing: -0.03em; }
+.login p { color: var(--text-2); margin: 6px 0 20px; }
+.field { display: grid; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 13px; color: var(--text-2); font-weight: 700; }
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], select, textarea {
+  font: inherit; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line-2); border-radius: 12px; padding: 10px 12px; width: 100%;
+  transition: border-color 0.2s; color-scheme: dark;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--text); }
+textarea { min-height: 190px; resize: vertical; line-height: 1.5; }
+.row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: #fff; }
+.msg { font-size: 13px; margin-top: 12px; min-height: 1.2em; color: var(--text-2); }
+.msg.err { color: var(--text); text-decoration: underline wavy; text-underline-offset: 4px; }
+
+.admin-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 24px; padding: 32px 0 96px; align-items: start; }
+.admin-grid h2 { font-size: 17px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2);
+  border: 1px solid var(--line-2); border-radius: 999px; padding: 2px 10px;
+}
+.preview { margin-top: 22px; border-top: 1px dashed var(--line-2); padding-top: 16px; }
+.preview .label { font-size: 13px; color: var(--text-3); margin-bottom: 4px; }
+.preview .release { padding: 14px 0 0; opacity: 1; transform: none; animation: none; }
+.preview .rel-title { font-size: 32px; }
+
+.list { display: grid; gap: 10px; }
+.item {
+  display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px;
+}
+.item:hover { border-color: var(--line-2); }
+.item .t { font-weight: 700; line-height: 1.3; }
+.item .s { font-size: 12px; color: var(--text-3); }
+.item .mini { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line-2); }
+.item .btns { display: flex; gap: 6px; }
+.badge-draft { font-size: 11px; border: 1px dashed var(--text-3); border-radius: 999px; padding: 1px 8px; margin-left: 6px; color: var(--text-3); }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; gap: 0; padding-top: 0; }
+  .side {
+    position: sticky; top: 60px; z-index: 20; display: flex; gap: 18px; overflow-x: auto; max-height: none;
+    background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(12px);
+    padding: 12px 0; margin: 0 -24px 32px; padding-left: 24px; padding-right: 24px; border-bottom: 1px solid var(--line);
+  }
+  .yr { display: flex; align-items: center; gap: 14px; margin: 0; flex: none; }
+  .yr-btn { font-size: 15px; color: var(--text-3); pointer-events: none; }
+  .yr-btn svg { display: none; }
+  .months { display: flex; }
+  .months-in { flex-direction: row; gap: 14px; padding: 0; overflow: visible; }
+  .mo { white-space: nowrap; padding: 2px 0; }
+  .layout.detail .side { display: none; }
+  .layout { padding-top: 0; }
+  .layout > #out { padding-top: 0; }
+  .admin-grid { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 1fr; }
+  .eyebrow { font-size: 19px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .release { opacity: 1; transform: none; }
+}
+  </style>
+</head>
+<body>
+<div class="loader" id="loader" aria-hidden="true"><div class="spinner"></div></div>
+
+<!--
+  SINGLE-FILE CHANGELOG (Supabase)
+  1. Run the SQL at the bottom of this file (search for "Run once in Supabase") in Supabase -> SQL Editor.
+  2. Fill in APP_CONFIG (search for "APP_CONFIG" below).
+  3. Put your logo at  assets/bytebolt.svg  and your banner image at  assets/header.webp  (next to this index.html).
+  4. Public page:  yoursite.com/        Admin page:  yoursite.com/#admin
+-->
+
+<a id="dlTop" class="btn sm dl-float" href="#" hidden><i data-icon="download" data-size="15"></i> Download</a>
+
+<div id="publicView">
+<main>
+  <section class="hero" id="hero">
+    <img class="hero-img" id="heroImg" src="assets/header.webp" alt="" onerror="this.style.display='none'">
+    <div class="wrap hero-inner">
+      <div class="eyebrow"><span>Release Notes</span><span class="upd" id="subline"></span></div>
+      <h1 class="hero-title"><span>What’s new in</span><img src="assets/bytebolt.svg" id="heroLogo" alt="" onerror="this.style.display='none';document.getElementById('heroName').hidden=false"><span id="heroName" hidden></span></h1>
+    </div>
+  </section>
+
+  <div class="wrap layout" id="layout">
+    <aside class="side" id="side" aria-label="Jump to month"></aside>
+    <div id="out" class="state">
+      <div class="spinner" role="status" aria-label="Loading"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© <span id="year"></span> <span id="appName2"></span></span>
+    
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Quick links">
+  <a class="dock-icon" href="https://bytebolt.app/" target="_blank" rel="noopener noreferrer" aria-label="Open ByteBolt">
+    <img src="assets/dockicon.svg" alt="">
+  </a>
+  <a class="dock-new" id="dockNew" href="#">What’s New</a>
+</nav>
+
+</div>
+
+<div id="adminView" hidden>
+<!-- ============ LOGIN ============ -->
+<div id="loginView" hidden>
+  <div class="wrap">
+    <form class="panel login" id="loginForm">
+      <a class="brand" href="#/">
+        <img src="assets/bytebolt.svg" alt="" onerror="this.style.display='none'">
+        <span>Changelog admin</span>
+      </a>
+      <h1>Sign in</h1>
+      <p>Only you can add or edit entries.</p>
+      <div class="field"><label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit" id="loginBtn">Sign in</button>
+      <p class="msg" id="loginMsg"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="appView" hidden>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#">
+        <img src="assets/bytebolt.svg" alt="" onerror="this.style.display='none'">
+        <span>Changelog admin</span>
+      </a>
+      <div class="top-right">
+        <a class="btn ghost sm" href="#"><i data-icon="eye" data-size="15"></i> View site</a>
+        <button class="btn ghost sm" id="logoutBtn"><i data-icon="logout" data-size="15"></i> Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="admin-grid">
+
+      <section class="panel">
+        <h2 id="formTitle"><i data-icon="plus" data-size="20"></i> New entry</h2>
+        <form id="entryForm">
+          <div class="row">
+            <div class="field"><label for="version">Version</label>
+              <input id="version" type="text" placeholder="1.4.0" required></div>
+            <div class="field"><label for="date">Date</label>
+              <input id="date" type="date" required></div>
+            <div class="field"><label for="type">Type</label>
+              <select id="type">
+                <option value="feature">New feature</option>
+                <option value="improvement">Improvement</option>
+                <option value="fix">Fix</option>
+                <option value="breaking">Breaking change</option>
+              </select></div>
+          </div>
+          <div class="field"><label for="title">Title</label>
+            <input id="title" type="text" placeholder="What changed?" required></div>
+          <div class="field"><label for="body">Details</label>
+            <textarea id="body" placeholder="One sentence summary of this release.&#10;&#10;### Faster startup&#10;The app now opens in under a second.&#10;&#10;### Dark mode&#10;Looks great at night.&#10;![screenshot](https://example.com/image.png)"></textarea>
+            <span style="font-size:12px;color:var(--text-3)">Markdown: first line = summary, <code>### Heading</code> for each feature, <code>- list</code>, <code>**bold**</code>, <code>![alt](https://image-link)</code> for a screenshot.</span>
+          </div>
+          <label class="check" style="margin-bottom:14px">
+            <input type="checkbox" id="published" checked> Published (untick to save as a draft)
+          </label>
+          <div class="actions">
+            <button class="btn" type="submit" id="saveBtn">Save entry</button>
+            <button class="btn ghost" type="button" id="cancelBtn" hidden>Cancel edit</button>
+          </div>
+          <p class="msg" id="formMsg"></p>
+        </form>
+
+        <div class="preview">
+          <div class="label">Live preview</div>
+          <div id="preview"><div class="body"></div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2><i data-icon="draft" data-size="20"></i> All entries <span class="pill" id="count">0</span></h2>
+        <div class="list" id="list"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Fill these in from Supabase: Project Settings -> API
+// The anon key is safe to put in the browser. Row Level Security protects your data.
+window.APP_CONFIG = {
+  SUPABASE_URL: "https://xurocxkgclmwgmzzdeni.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cm9jeGtnY2xtd2dtenpkZW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1OTIwMjIsImV4cCI6MjEwNzE2ODAyMn0.F0RAEgag1GVfCtMO2Crz3rx4VMN6NN8HGyO0SpupbYk",
+
+  // Shown in the header and title: "What's new in <APP_NAME>" (used as text if the logo is missing)
+  APP_NAME: " ",
+  // Link for the "Download" button. Leave "" to hide the button.
+  DOWNLOAD_URL: "",
+  // Banner image shown behind "What's new in ..." (your glitch image). Put it in the assets folder.
+  HEADER_IMAGE: "assets/header.png",
+};
+
+</script>
+<script>
+// Shared helpers: icons, safe markdown, dates, release markup, Supabase client.
+
+const ICONS = {
+  feature:
+    '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 17v4M17 19h4"/>',
+  improvement: '<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>',
+  fix:
+    '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6 2.6-2.2z"/>',
+  breaking: '<path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18v.01"/>',
+  download: '<path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
+  trash:
+    '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  eye:
+    '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  logout:
+    '<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4"/><path d="M16 8l4 4-4 4"/><path d="M20 12H9"/>',
+  draft:
+    '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/>',
+  chevron: '<path d="M6 15l6-6 6 6"/>',
+  back: '<path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/>',
+};
+
+function icon(name, size = 18, sw = 1.75) {
+  return `<svg class="ico" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
+}
+
+const TYPE_LABELS = { feature: "New", improvement: "Improved", fix: "Fixed", breaking: "Breaking" };
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+// Tiny, safe markdown. HTML is escaped first, then it supports:
+//   ### Feature heading      **bold**   *italic*   `code`   [link](https://...)
+//   - list items             ![alt](https://image-url)  (on its own line)   blank line = new paragraph
+function inlineMd(s) {
+  return s
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+}
+
+function renderMarkdown(src) {
+  const lines = esc(src).split(/\r?\n/);
+  const out = [];
+  let list = false;
+  let para = [];
+  const flushPara = () => {
+    if (para.length) out.push(`<p>${inlineMd(para.join(" "))}</p>`);
+    para = [];
+  };
+  const closeList = () => { if (list) { out.push("</ul>"); list = false; } };
+
+  for (const line of lines) {
+    let m;
+    if ((m = line.match(/^\s*###\s+(.*)$/))) {
+      flushPara(); closeList();
+      out.push(`<h4>${inlineMd(m[1])}</h4>`);
+    } else if ((m = line.match(/^\s*!\[([^\]]*)\]\((https:\/\/[^\s)]+)\)\s*$/))) {
+      flushPara(); closeList();
+      out.push(`<img src="${m[2]}" alt="${m[1]}" loading="lazy">`);
+    } else if ((m = line.match(/^\s*[-*]\s+(.*)$/))) {
+      flushPara();
+      if (!list) { out.push("<ul>"); list = true; }
+      out.push(`<li>${inlineMd(m[1])}</li>`);
+    } else if (line.trim() === "") {
+      flushPara(); closeList();
+    } else {
+      closeList(); para.push(line.trim());
+    }
+  }
+  flushPara(); closeList();
+  return out.join("");
+}
+
+function formatDate(iso) {
+  const [y, m, d] = String(iso).split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
+
+// "today", "yesterday", "3 days ago", or a full date for older entries
+function relDate(iso) {
+  const [y, m, d] = String(iso).split("-").map(Number);
+  const then = new Date(y, m - 1, d);
+  const now = new Date();
+  const days = Math.round((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - then) / 86400000);
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 30) return `${days} days ago`;
+  return formatDate(iso);
+}
+
+// One release block (used by the public page AND the admin live preview).
+// opts.link = true makes the title a permalink to the single-release page.
+function releaseHTML(e, i = 0, opts = {}) {
+  const title = opts.link
+    ? `<a href="#v/${encodeURIComponent(e.version)}">${esc(e.title)}</a>`
+    : esc(e.title);
+  const showTag = e.type && e.type !== "feature";
+  return `
+    <article class="release" id="v-${esc(e.version)}" style="--i:${Math.min(i, 8)}">
+      <time class="rel-date" datetime="${esc(e.release_date)}">${formatDate(e.release_date)}</time>
+      <h3 class="rel-title">${title}</h3>
+      <div class="rel-meta">
+        <span class="ver">v${esc(e.version)}</span>
+        ${showTag ? `<span class="tag tag-${esc(e.type)}">${esc(TYPE_LABELS[e.type] || e.type)}</span>` : ""}
+      </div>
+      <div class="body">${renderMarkdown(e.body)}</div>
+    </article>`;
+}
+
+let _sb = null;
+function getClient() {
+  if (_sb) return _sb;
+  const c = window.APP_CONFIG || {};
+  if (!c.SUPABASE_URL || c.SUPABASE_URL.includes("YOUR-PROJECT")) return null;
+  _sb = window.supabase.createClient(c.SUPABASE_URL, c.SUPABASE_ANON_KEY);
+  return _sb;
+}
+
+// Fill every <i data-icon="name" data-size="18"> placeholder with an SVG.
+function hydrateIcons(root = document) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 18);
+  });
+}
+
+</script>
+<script>
+// ---------- Public changelog ----------
+(function () {
+  const cfg = window.APP_CONFIG || {};
+  const $ = (id) => document.getElementById(id);
+  const out = $("out");
+  const side = $("side");
+  const layout = $("layout");
+  let entries = [];
+    let loaded = false;
+
+  // ---- loading screen: fade out (0.3s) once the page has loaded ----
+  const pageReady = new Promise((res) => {
+    if (document.readyState === "complete") res();
+    else window.addEventListener("load", res, { once: true });
+  });
+  async function hideLoader() {
+    await pageReady;
+    const l = $("loader");
+    if (!l) return;
+    l.classList.add("done");
+    setTimeout(() => l.remove(), 350);
+  }
+  setTimeout(hideLoader, 8000); // safety: never get stuck on the loader
+
+  // ---- header / config ----
+  const appName = cfg.APP_NAME || "Your App";
+
+  $("appName2").textContent = appName;
+  $("heroName").textContent = appName;
+  $("year").textContent = new Date().getFullYear();
+  for (const id of ["dlTop"]) {
+    if (cfg.DOWNLOAD_URL) { $(id).href = cfg.DOWNLOAD_URL; $(id).hidden = false; }
+  }
+  if (cfg.HEADER_IMAGE) $("heroImg").src = cfg.HEADER_IMAGE;
+  hydrateIcons();
+
+  // ---- group entries by month (entries are already newest first) ----
+  function groupByMonth(list) {
+    const map = new Map();
+    for (const e of list) {
+      const [y, m] = e.release_date.split("-").map(Number);
+      const key = `${y}-${m - 1}`;
+      if (!map.has(key)) map.set(key, { y, m: m - 1, items: [] });
+      map.get(key).items.push(e);
+    }
+    return [...map.values()];
+  }
+
+  // ---- sidebar: collapsible years, months jump + scrollspy ----
+  function renderSidebar(groups) {
+    const years = new Map();
+    for (const g of groups) {
+      if (!years.has(g.y)) years.set(g.y, []);
+      years.get(g.y).push(g);
+    }
+    side.innerHTML = [...years].map(([y, ms], i) => `
+      <div class="yr" data-year="${y}" data-open="${i === 0}">
+        <button type="button" class="yr-btn" aria-expanded="${i === 0}">${y}${icon("chevron", 18, 2.25)}</button>
+        <div class="months"><div class="months-in">
+          ${ms.map((g) => `<button type="button" class="mo" data-target="m-${g.y}-${g.m}">${MONTHS[g.m]}</button>`).join("")}
+        </div></div>
+      </div>`).join("");
+    side.hidden = false;
+    spy(true);
+  }
+
+  side.addEventListener("click", (e) => {
+    const yb = e.target.closest(".yr-btn");
+    if (yb) {
+      const yr = yb.parentElement;
+      const open = yr.dataset.open !== "true";
+      yr.dataset.open = String(open);
+      yb.setAttribute("aria-expanded", String(open));
+      return;
+    }
+    const mo = e.target.closest(".mo");
+    if (mo) document.getElementById(mo.dataset.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  let activeId = null;
+  function spy(force) {
+    const secs = [...document.querySelectorAll(".month")];
+    if (!secs.length) return;
+    let cur = secs[0];
+    for (const s of secs) if (s.getBoundingClientRect().top <= 150) cur = s;
+    if (!force && cur.id === activeId) return;
+    activeId = cur.id;
+    side.querySelectorAll(".mo").forEach((b) => b.classList.toggle("on", b.dataset.target === activeId));
+    const on = side.querySelector(".mo.on");
+    if (on) {
+      const yr = on.closest(".yr");
+      if (yr && yr.dataset.open !== "true") {
+        yr.dataset.open = "true";
+        yr.querySelector(".yr-btn").setAttribute("aria-expanded", "true");
+      }
+      if (matchMedia("(max-width: 860px)").matches) on.scrollIntoView({ inline: "center", block: "nearest" });
+    }
+  }
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; if (!layout.classList.contains("detail")) spy(false); });
+  }, { passive: true });
+
+  // ---- render ----
+  function message(iconName, title, text) {
+    out.className = "state";
+    out.innerHTML = `
+      <svg class="state-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[iconName]}</svg>
+      <h3>${esc(title)}</h3><p>${esc(text)}</p>`;
+  }
+
+    function renderList() {
+    $("hero").hidden = false;
+    layout.classList.remove("detail");
+    if (!entries.length) {
+      side.innerHTML = "";
+      message("draft", "Nothing here yet", "No updates have been published.");
+      return;
+    }
+    const groups = groupByMonth(entries);
+    let n = 0;
+    out.className = "timeline";
+    out.innerHTML = groups.map((g) => `
+      <section class="month" id="m-${g.y}-${g.m}" aria-label="${MONTHS[g.m]} ${g.y}">
+        ${g.items.map((e) => releaseHTML(e, n++, { link: true })).join("")}
+      </section>`).join("");
+    renderSidebar(groups);
+  }
+
+  function renderDetail(version) {
+    const e = entries.find((x) => String(x.version) === version);
+    $("hero").hidden = true;
+    layout.classList.add("detail");
+    if (!e) {
+      message("breaking", "Release not found", `There is no published release v${version}.`);
+      return;
+    }
+    out.className = "timeline";
+    out.innerHTML = `<a class="back" href="#">${icon("back", 16, 2)} All releases</a>${releaseHTML(e, 0)}`;
+    window.scrollTo(0, 0);
+    document.title = `v${e.version} · ${e.title} · ${appName}`;
+  }
+
+  function route() {
+    if (location.hash.startsWith("#admin")) return;
+    if (!loaded) return;
+    const m = location.hash.match(/^#v\/(.+)$/);
+    if (m) renderDetail(decodeURIComponent(m[1]));
+    else { document.title = "Changelog" + (appName ? " · " + appName : ""); renderList(); }
+  }
+  window.addEventListener("hashchange", route);
+
+  // ---- load from Supabase ----
+    // ---- load from Supabase ----
+  (async function load() {
+    const sb = getClient();
+    if (!sb) {
+      message("breaking", "Supabase is not set up yet", "Open index.html and add your Supabase URL and anon key in APP_CONFIG.");
+      hideLoader();
+      return;
+    }
+    const { data, error } = await sb
+      .from("entries")
+      .select("*")
+      .order("release_date", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) { message("breaking", "Could not load the changelog", error.message); hideLoader(); return; }
+    entries = data || [];
+    loaded = true;
+
+    if (entries[0]) {
+      $("subline").textContent = `Updated ${relDate(entries[0].release_date)}`;
+      $("dockNew").href = `#v/${encodeURIComponent(entries[0].version)}`;
+    }
+    route();
+    hideLoader();
+  })();
+
+})();
+</script>
+<script>
+// ---------- Admin ----------
+(function () {
+  const sb = getClient();
+  const $ = (id) => document.getElementById(id);
+  let entries = [];
+  let editingId = null;
+
+  hydrateIcons();
+
+  if (!sb) {
+    $("loginView").hidden = false;
+    $("loginForm").innerHTML = '<h1>Not set up</h1><p>Open <b>index.html</b>, find <b>APP_CONFIG</b> near the top and add your Supabase URL and anon key.</p>';
+    return;
+  }
+
+  // ---------- auth ----------
+  async function showForSession() {
+    const { data } = await sb.auth.getSession();
+    const loggedIn = !!data.session;
+    $("loginView").hidden = loggedIn;
+    $("appView").hidden = !loggedIn;
+    if (loggedIn) { resetForm(); loadEntries(); }
+  }
+
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("loginBtn"); btn.disabled = true;
+    $("loginMsg").className = "msg"; $("loginMsg").textContent = "Signing in…";
+    const { error } = await sb.auth.signInWithPassword({
+      email: $("email").value.trim(), password: $("password").value,
+    });
+    btn.disabled = false;
+    if (error) { $("loginMsg").className = "msg err"; $("loginMsg").textContent = error.message; return; }
+    $("password").value = "";
+    showForSession();
+  });
+
+  $("logoutBtn").addEventListener("click", async () => { await sb.auth.signOut(); showForSession(); });
+
+  // ---------- list ----------
+  async function loadEntries() {
+    const { data, error } = await sb.from("entries").select("*")
+      .order("release_date", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error) { $("list").innerHTML = `<p class="msg err">${esc(error.message)}</p>`; return; }
+    entries = data || [];
+    renderList();
+  }
+
+  function renderList() {
+    $("count").textContent = entries.length;
+    if (!entries.length) { $("list").innerHTML = '<p class="msg">No entries yet. Add your first one.</p>'; return; }
+    $("list").innerHTML = entries.map((e) => `
+      <div class="item">
+        <div class="mini">${icon(e.type, 16)}</div>
+        <div>
+          <div class="t">v${esc(e.version)} · ${esc(e.title)}${e.published ? "" : '<span class="badge-draft">draft</span>'}</div>
+          <div class="s">${formatDate(e.release_date)} · ${esc(TYPE_LABELS[e.type] || e.type)}</div>
+        </div>
+        <div class="btns">
+          <button class="btn ghost sm" data-edit="${e.id}" aria-label="Edit">${icon("edit", 16)}</button>
+          <button class="btn ghost sm danger" data-del="${e.id}" aria-label="Delete">${icon("trash", 16)}</button>
+        </div>
+      </div>`).join("");
+  }
+
+  $("list").addEventListener("click", async (ev) => {
+    const edit = ev.target.closest("[data-edit]");
+    const del = ev.target.closest("[data-del]");
+    if (edit) startEdit(edit.dataset.edit);
+    if (del) {
+      const e = entries.find((x) => x.id === del.dataset.del);
+      if (!e || !confirm(`Delete v${e.version} "${e.title}"? This cannot be undone.`)) return;
+      const { error } = await sb.from("entries").delete().eq("id", e.id);
+      if (error) { alert(error.message); return; }
+      if (editingId === e.id) resetForm();
+      loadEntries();
+    }
+  });
+
+  // ---------- form ----------
+  const today = () => new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in local time
+
+  function resetForm() {
+    editingId = null;
+    $("entryForm").reset();
+    $("date").value = today();
+    $("published").checked = true;
+    $("formTitle").innerHTML = icon("plus", 20) + " New entry";
+    $("cancelBtn").hidden = true;
+    $("formMsg").textContent = "";
+    renderPreview();
+  }
+
+  function startEdit(id) {
+    const e = entries.find((x) => x.id === id);
+    if (!e) return;
+    editingId = id;
+    $("version").value = e.version;
+    $("date").value = e.release_date;
+    $("type").value = e.type;
+    $("title").value = e.title;
+    $("body").value = e.body;
+    $("published").checked = e.published;
+    $("formTitle").innerHTML = icon("edit", 20) + " Edit entry";
+    $("cancelBtn").hidden = false;
+    $("formMsg").textContent = "";
+    renderPreview();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  $("cancelBtn").addEventListener("click", resetForm);
+
+  $("entryForm").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const row = {
+      version: $("version").value.trim().replace(/^v/i, ""),
+      release_date: $("date").value,
+      type: $("type").value,
+      title: $("title").value.trim(),
+      body: $("body").value,
+      published: $("published").checked,
+    };
+    $("saveBtn").disabled = true;
+    $("formMsg").className = "msg"; $("formMsg").textContent = "Saving…";
+
+    const { error } = editingId
+      ? await sb.from("entries").update(row).eq("id", editingId)
+      : await sb.from("entries").insert(row);
+
+    $("saveBtn").disabled = false;
+    if (error) { $("formMsg").className = "msg err"; $("formMsg").textContent = error.message; return; }
+
+    const wasEdit = !!editingId;
+    resetForm();
+    $("formMsg").textContent = wasEdit ? "Updated." : "Saved. It is live on the site.";
+    loadEntries();
+  });
+
+  // ---------- live preview (same markup as the public page) ----------
+  function renderPreview() {
+    $("preview").innerHTML = releaseHTML({
+      version: $("version").value.replace(/^v/i, "") || "0.0.0",
+      release_date: $("date").value || today(),
+      type: $("type").value,
+      title: $("title").value || "Title",
+      body: $("body").value || "Details appear here.",
+    });
+  }
+  ["version", "date", "type", "title", "body"].forEach((id) => $(id).addEventListener("input", renderPreview));
+
+  window.__adminInit = showForSession;
+  showForSession();
+
+})();
+</script>
+<script>
+
+  // ---- tiny router: "/" = changelog, "/#v/1.0.1" = one release, "/#admin" = admin ----
+  (function () {
+    const pub = document.getElementById("publicView");
+    const adminV = document.getElementById("adminView");
+    const name = (window.APP_CONFIG && window.APP_CONFIG.APP_NAME) || "";
+    let wasAdmin = null;
+    function route() {
+      const isAdmin = location.hash.replace("#", "").startsWith("admin");
+      pub.hidden = isAdmin;
+      adminV.hidden = !isAdmin;
+      if (isAdmin) document.title = "Admin · Changelog";
+      else if (!location.hash.startsWith("#v/")) document.title = "Changelog" + (name ? " · " + name : "");
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) { robots = document.createElement("meta"); robots.name = "robots"; document.head.appendChild(robots); }
+      robots.content = isAdmin ? "noindex, nofollow" : "index, follow";
+      if (wasAdmin !== null && wasAdmin !== isAdmin) window.scrollTo(0, 0);
+      wasAdmin = isAdmin;
+      if (isAdmin && window.__adminInit) window.__adminInit();
+    }
+    window.addEventListener("hashchange", route);
+    route();
+  })();
+
+</script>
+
+<!--- Run this once in Supabase: Dashboard -> SQL Editor -> New query -> paste -> Run
+
+create table if not exists public.entries (
+  id           uuid primary key default gen_random_uuid(),
+  version      text not null,
+  release_date date not null default current_date,
+  type         text not null default 'feature'
+               check (type in ('feature', 'improvement', 'fix', 'breaking')),
+  title        text not null,
+  body         text not null default '',
+  published    boolean not null default true,
+  created_at   timestamptz not null default now()
+);
+
+create index if not exists entries_date_idx
+  on public.entries (release_date desc, created_at desc);
+
+-- Row Level Security: this is what protects your data.
+alter table public.entries enable row level security;
+
+-- Let the API roles use the table (new Supabase projects do NOT do this automatically).
+-- Without these you get: "permission denied for table entries".
+grant usage on schema public to anon, authenticated;
+grant select on public.entries to anon;
+grant select, insert, update, delete on public.entries to authenticated;
+
+-- Anyone (the public page) can read PUBLISHED entries only.
+drop policy if exists "public can read published entries" on public.entries;
+create policy "public can read published entries"
+  on public.entries for select
+  to anon, authenticated
+  using (published = true);
+
+-- Logged-in admin can read everything (including drafts).
+drop policy if exists "admin can read all" on public.entries;
+create policy "admin can read all"
+  on public.entries for select
+  to authenticated
+  using (true);
+
+-- Logged-in admin can add, edit and delete.
+drop policy if exists "admin can insert" on public.entries;
+create policy "admin can insert"
+  on public.entries for insert
+  to authenticated
+  with check (true);
+
+drop policy if exists "admin can update" on public.entries;
+create policy "admin can update"
+  on public.entries for update
+  to authenticated
+  using (true) with check (true);
+
+drop policy if exists "admin can delete" on public.entries;
+create policy "admin can delete"
+  on public.entries for delete
+  to authenticated
+  using (true);
+
+-- Optional: a first entry so the page is not empty (only added if the table is empty).
+insert into public.entries (version, release_date, type, title, body)
+select '1.0.0', current_date, 'feature', 'First release',
+  E'Welcome! This is the first version.\n\n- Fast startup\n- Clean **dark** theme\n- Works on Windows 10 and 11'
+where not exists (select 1 from public.entries);
+- Run once in Supabase: Dashboard -> SQL Editor -> New query -> paste -> Run -->
+<script type="text/plain" id="supabase-schema">
+
+</script>
+
+</body>
+</html>
