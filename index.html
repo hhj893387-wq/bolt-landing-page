@@ -8,6 +8,8 @@
 <link rel="canonical" href="https://bytebolt.app/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 
+
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ByteBolt">
 <meta property="og:title" content="ByteBolt – Download Any Video From Anywhere">
@@ -48,6 +50,10 @@
   -->
 
   <script>document.documentElement.classList.add('js');</script>
+
+<script>
+  if (/^#(\/|v\/|admin)/.test(location.hash)) location.replace('whatsnew.html' + location.hash);
+</script>
 
   <style>
     :root {
@@ -95,6 +101,24 @@
       -webkit-user-drag: none;
       user-drag: none;
     }
+
+        /* ---------- Page loader (fades out in 0.3s) ---------- */
+    .loader {
+      position: fixed; inset: 0; z-index: 100;
+      display: grid; place-items: center;
+      background: #000;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .loader.done { opacity: 0; pointer-events: none; }
+    html:not(.js) .loader { display: none; }      /* no JS = no loader */
+    html.is-loading { overflow: hidden; }          /* no scrolling while loading */
+    .loader__spin {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid #3a3a3a; border-top-color: #fff;
+      animation: loader-spin 0.8s linear infinite;
+    }
+    @keyframes loader-spin { to { transform: rotate(360deg); } }
 
     /* ---------- Fixed background stack (crossfades on scroll) ---------- */
     .bgs {
@@ -471,6 +495,26 @@
     .btn--dark:hover { background: #e5e5e5; }
     .btn--dark:focus-visible { outline-color: #000; }
 
+/* ---------- Top nav dock ---------- */
+.navdock {
+  position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 55;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: color-mix(in srgb, #0d0d0d 85%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.navdock a {
+  display: inline-flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: 8px; text-decoration: none; color: #fff;
+  transition: background .2s, opacity .2s, transform .15s;
+}
+.navdock a:active { transform: scale(.97); }
+.navdock-icon { width: 44px; }
+.navdock-icon img { width: 20px; height: 20px; }
+.navdock-new { min-width: 190px; padding: 0 22px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; opacity: .6; }
+.navdock-new:hover { opacity: 1; }
+@media (max-width: 520px) { .navdock-new { min-width: 130px; padding: 0 14px; } }
+
     /* ---------- Responsive ---------- */
     @media (max-width: 900px) {
       .tabs { grid-template-columns: 1fr; }
@@ -495,6 +539,51 @@
 </head>
 <body>
 
+  <div class="loader" id="loader" aria-hidden="true"><div class="loader__spin"></div></div>
+  <script>
+  (function () {
+    var loader = document.getElementById('loader');
+    var root = document.documentElement;
+    root.classList.add('is-loading');
+
+    function imgDone(img) {
+      if (img.complete) return Promise.resolve();
+      return new Promise(function (r) {
+        img.addEventListener('load', r, { once: true });
+        img.addEventListener('error', r, { once: true });
+      });
+    }
+    function videoDone(v) {
+      if (v.readyState >= 2) return Promise.resolve();
+      return new Promise(function (r) {
+        v.addEventListener('loadeddata', r, { once: true });
+        v.addEventListener('error', r, { once: true });
+      });
+    }
+
+    var assets = new Promise(function (resolve) {
+      function collect() {
+        var jobs = [];
+        Array.prototype.forEach.call(document.querySelectorAll('img'), function (i) { jobs.push(imgDone(i)); });
+        Array.prototype.forEach.call(document.querySelectorAll('video'), function (v) { jobs.push(videoDone(v)); });
+        if (document.fonts && document.fonts.ready) jobs.push(document.fonts.ready);
+        Promise.all(jobs).then(resolve);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', collect);
+      else collect();
+    });
+
+    var timeout = new Promise(function (r) { setTimeout(r, 10000); });   // safety: never get stuck
+
+    // other scripts wait on this before starting their reveal animations
+    window.__ready = Promise.race([assets, timeout]).then(function () {
+      loader.classList.add('done');
+      root.classList.remove('is-loading');
+      setTimeout(function () { loader.remove(); }, 350);
+    });
+  })();
+  </script>
+
   <div class="progress" aria-hidden="true"></div>
 
   <!-- Fixed backgrounds (hero + final section only). data-i = index of the section it belongs to. -->
@@ -502,6 +591,11 @@
     <img class="bg-hero" data-i="0" data-flip src="assets/hero-bg.png" alt="" draggable="false">
     <img class="bg-cta"  data-i="3" src="assets/cta-bg.png"  alt="" draggable="false">
   </div>
+
+<nav class="navdock" aria-label="Quick links">
+  <a class="navdock-icon" href="#top" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt="" draggable="false"></a>
+  <a class="navdock-new" href="whatsnew.html">What’s New</a>
+</nav>
 
   <a class="logo" href="#top" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt" draggable="false"></a>
 
@@ -716,7 +810,9 @@
             }
           });
         }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
-        revealEls.forEach(function (el) { io.observe(el); });
+               window.__ready.then(function () {
+          revealEls.forEach(function (el) { io.observe(el); });
+        });
       } else {
         revealEls.forEach(function (el) { el.classList.add('is-visible'); });
       }
@@ -793,5 +889,26 @@
       update();
     })();
   </script>
+
+  <script>
+  /* "What's New" dock link -> latest release */
+  (function () {
+    var link = document.querySelector('.navdock-new');
+    if (!link) return;
+    var URL_ = "https://xurocxkgclmwgmzzdeni.supabase.co";
+    var KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1cm9jeGtnY2xtd2dtenpkZW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1OTIwMjIsImV4cCI6MjEwNzE2ODAyMn0.F0RAEgag1GVfCtMO2Crz3rx4VMN6NN8HGyO0SpupbYk";
+
+    fetch(URL_ + "/rest/v1/entries?select=version&published=eq.true&order=release_date.desc,created_at.desc&limit=1", {
+      headers: { apikey: KEY, Authorization: "Bearer " + KEY }
+    })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (rows) {
+        if (rows && rows[0] && rows[0].version) {
+          link.href = "whatsnew.html#v/" + encodeURIComponent(rows[0].version);
+        }
+      })
+      .catch(function () {});
+  })();
+</script>
 </body>
 </html>
