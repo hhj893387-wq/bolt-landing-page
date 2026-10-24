@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ByteBolt – Free Video Downloader for Windows | Save Videos in HD & 8K</title>
-<meta name="description" content="ByteBolt is a fast video downloader for Windows. Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
+  <title>ByteBolt</title>
+<meta name="description" content="ByteBolt is a fast video downloader Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
 <link rel="canonical" href="https://bytebolt.app/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 
@@ -29,7 +29,7 @@
   "url": "https://bytebolt.app/",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Windows",
-  "description": "Fast video downloader for Windows.",
+  "description": "Fast video downloader.",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
 </script>
@@ -38,13 +38,15 @@
   <!--
     FILES — put these in an "assets" folder next to this file:
 
-      assets/demo.mp4         Desktop 1   (the video that sits in the video-placeholder)
-      assets/hero-bg.png      Desktop 1   (magicpattern background, exported as it unflipped; the page mirrors it)
-      assets/step-1.png       Desktop 3.1 (paste link screenshot)
-      assets/step-2.png       Desktop 3.2 (choose quality screenshot)
-      assets/step-3.png       Desktop 3.3 (saved screenshot)
-      assets/cta-bg.png       Desktop 4   (javier-garcia background)
-      assets/Bolt-Setup.exe   The installer that the download buttons serve
+      assets/demo.mp4           Desktop 1   (the video that sits in the video-placeholder)
+      assets/hero-bg.png        Desktop 1   (magicpattern background, exported as it unflipped; the page mirrors it)
+      assets/convert.png        Offers      (convert-to-formats screenshot, PNG)
+      assets/trim.png           Offers      (trim-your-video screenshot, PNG)
+      assets/step-1.png         Desktop 3.1 (paste link screenshot)
+      assets/step-2.png         Desktop 3.2 (choose quality screenshot)
+      assets/step-3.png         Desktop 3.3 (saved screenshot)
+      assets/cta-bg.png         Desktop 4   (javier-garcia background)
+      assets/Bolt-Setup.exe     The installer that the download buttons serve
 
     Also put thanks.html next to this file: users are sent there after clicking download.
   -->
@@ -72,6 +74,22 @@
       --fs-lead: clamp(16px, 1.35vw, 19px);
       --fs-tab-title: clamp(18px, 1.6vw, 22px);
       --fs-small: clamp(14px, 1.1vw, 16px);
+      --fs-hero-title: clamp(24px, 2.8vw, 40px);
+      --fs-wordmark: clamp(72px, 8.9vw, 128px);
+      --fs-card-title: clamp(20px, 2vw, 28px);
+      --fs-card-title-lg: clamp(22px, 2.4vw, 34px);
+      --fs-logo: 24px;
+      --fs-nav: 16px;
+      --fs-btn: 17px;
+      --fs-pixel: 1.3em;          /* pixel-font accent words */
+      --fs-pixel-hero: 1.6em;     /* pixel accent in the hero title */
+      --fs-pixel-dot: 2.4em;      /* the big pixel dot in the hero title */
+
+      /* font weights */
+      --fw-regular: 400;
+      --fw-medium: 500;
+      --fw-semibold: 600;
+      --fw-bold: 700;
 
       --ease: cubic-bezier(.22, .61, .36, 1);
       --v2: clamp(170px, 30svh, 280px);   /* dock glow height at the final section */
@@ -84,7 +102,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
-      font-weight: 500;
+      font-weight: var(--fw-medium);
       -webkit-font-smoothing: antialiased;
     }
 
@@ -161,8 +179,8 @@
       left: clamp(20px, 3.4vw, 49px);
       z-index: 50;
       font-family: var(--font-logo);
-      font-weight: 700;
-      font-size: 24px;
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-logo);
       line-height: 1;
       color: var(--text);
       text-decoration: none;
@@ -183,15 +201,15 @@
 
     .headline {
       margin: 0;
-      font-weight: 600;
+      font-weight: var(--fw-semibold);
       font-size: var(--fs-h);
       line-height: 1.25;
       letter-spacing: -0.01em;
     }
     .pixel {
       font-family: var(--font-pixel);
-      font-weight: 400;
-      font-size: 1.3em;
+      font-weight: var(--fw-regular);
+      font-size: var(--fs-pixel);
       line-height: 1;
       letter-spacing: 0;
     }
@@ -228,14 +246,14 @@
     }
     .hero__title {
       margin: 0;
-      font-weight: 600;
-      font-size: clamp(24px, 2.8vw, 40px);
+      font-weight: var(--fw-semibold);
+      font-size: var(--fs-hero-title);
       line-height: 1.3;
       letter-spacing: -0.01em;
       text-align: center;
     }
-    .hero__title .pixel { font-size: 1.6em; }
-    .hero__title .pixel--dot { font-size: 2.4em; line-height: 0; }
+    .hero__title .pixel { font-size: var(--fs-pixel-hero); }
+    .hero__title .pixel--dot { font-size: var(--fs-pixel-dot); line-height: 0; }
 
     /* big wordmark, partly hidden behind the video */
     .hero__mark {
@@ -243,8 +261,8 @@
       z-index: 0;
       margin: clamp(8px, 2.5vh, 28px) 0 -0.13em;
       font-family: var(--font-logo);
-      font-weight: 700;
-      font-size: clamp(72px, 8.9vw, 128px);
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-wordmark);
       line-height: .8;
       letter-spacing: -0.02em;
       user-select: none;
@@ -256,13 +274,11 @@
       position: relative;
       z-index: 2;
       width: min(963px, 100%);
-      aspect-ratio: 963 / 509;
-      border-radius: 20px 20px 0 0;
+      aspect-ratio: 1580 / 950;
+      border-radius: 20px;
       overflow: hidden;
-      background: linear-gradient(180deg, #9a9a9a 0%, #8c8c8c 100%);   /* shows until the video loads */
-      /* the bottom of the player melts away, so no hard edge is ever visible above the glow */
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 96%);
-              mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 96%);
+  
+
     }
     .hero__video video {
       display: block;
@@ -270,13 +286,7 @@
       height: 100%;
       object-fit: cover;
     }
-    .hero__video::after {            /* soft fade into the glow below */
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(to bottom, transparent 62%, rgba(232, 228, 212, .55) 100%);
-    }
+
 
     /* ---------- Download dock (glow + button) ----------
        Fixed to the bottom of the screen. It shrinks as you scroll
@@ -335,21 +345,87 @@
       white-space: nowrap;
     }
 
-    /* ---------- 2. Speed ---------- */
-    .speed {
+    /* ---------- 2. What Bolt offers ---------- */
+    .offers {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      gap: clamp(32px, 6vh, 64px);
+      padding: 120px var(--pad-x) 180px;
+    }
+    .offers__title { text-align: center; }
+
+    .offers__grid {
+      width: 100%;
+      max-width: 1280px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: clamp(14px, 1.8vw, 24px);
+    }
+    /* Masonry: with JS, every card keeps its own natural height (set by its image/text)
+       and the grid packs the next cards into whatever space is free above/beside them.
+       The script below turns each card's height into a number of 1px rows. */
+    .js .offers__grid {
+      grid-auto-rows: 1px;
+      row-gap: 0;                       /* vertical spacing is added to each card's row span instead */
+      grid-auto-flow: row dense;        /* later cards slide up into free gaps */
+      align-items: start;               /* cards do NOT stretch to match their neighbour */
+    }
+    .card {
+      background: #050505;
+      border: 1px solid #2a2a2a;
+      border-radius: 28px;
+      padding: clamp(22px, 2.6vw, 38px);
+      grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card--wide-a { grid-column: span 2; }
+    .card--wide-b { grid-column: span 4; }
+    .card__title {
+      margin: 0;
+      font-weight: var(--fw-regular);
+      font-size: var(--fs-card-title);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .card--wide-a .card__title,
+    .card--wide-b .card__title { font-size: var(--fs-card-title); }
+    .card__text {
+      margin: 0;
+      font-size: var(--fs-small);
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .card__img {
+      width: 100%;
+      height: auto;
+      margin-top: 12px;
+      border-radius: 8px;               /* rounded image corners */
+      border: 1px solid var(--border);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      padding: 120px var(--pad-x);
+      width: min(300px, 100%);
+      height: 56px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-btn);
+      text-decoration: none;
+      transition: transform .25s var(--ease), background .25s ease, opacity .9s var(--ease);
     }
-    .speed .headline { max-width: 12em; }
-    .speed__text {
-      margin: 20px 0 0;
-      max-width: 30em;
-      font-size: var(--fs-lead);
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.82);
-    }
+    .btn:hover { transform: translateY(-2px); background: #e9e9e9; }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+    .btn--dark { background: #fff; color: #000; }
+    .btn--dark:hover { background: #e5e5e5; }
+    .btn--dark:focus-visible { outline-color: #000; }
 
     /* ---------- 3. How to download (vertical tabs) ---------- */
     .how {
@@ -456,6 +532,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 8px;               /* rounded image corners */
       opacity: 0;
       transform: scale(1.03);
       transition: opacity .5s ease, transform .7s var(--ease);
@@ -474,27 +551,6 @@
     }
     .cta .headline { max-width: 12em; }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: min(300px, 100%);
-      height: 56px;
-      background: #fff;
-      color: #000;
-      border-radius: 8px;
-      font-family: var(--font-body);
-      font-weight: 500;
-      font-size: 17px;
-      text-decoration: none;
-      transition: transform .25s var(--ease), background .25s ease, opacity .9s var(--ease);
-    }
-    .btn:hover { transform: translateY(-2px); background: #e9e9e9; }
-    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-    .btn--dark { background: #fff; color: #000; }
-    .btn--dark:hover { background: #e5e5e5; }
-    .btn--dark:focus-visible { outline-color: #000; }
-
 /* ---------- Top nav dock ---------- */
 .navdock {
   position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 55;
@@ -511,7 +567,7 @@
 .navdock a:active { transform: scale(.97); }
 .navdock-icon { width: 44px; }
 .navdock-icon img { width: 20px; height: 20px; }
-.navdock-new { min-width: 190px; padding: 0 22px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; opacity: .6; }
+.navdock-new { min-width: 190px; padding: 0 22px; font-size: var(--fs-nav); font-weight: var(--fw-semibold); letter-spacing: -0.01em; opacity: .6; }
 .navdock-new:hover { opacity: 1; }
 @media (max-width: 520px) { .navdock-new { min-width: 130px; padding: 0 14px; } }
 
@@ -521,6 +577,14 @@
       /* small screens: no pinning, tabs are tapped instead */
       .how { height: auto; overflow: hidden; }
       .how__sticky { position: static; height: auto; min-height: 100svh; padding-top: 110px; padding-bottom: 150px; overflow: visible; }
+
+      .offers__grid { grid-template-columns: 1fr 1fr; }
+      .card, .card--wide-a { grid-column: span 1; }
+      .card--wide-b { grid-column: span 2; }
+    }
+    @media (max-width: 640px) {
+      .offers__grid { grid-template-columns: 1fr; }
+      .card, .card--wide-a, .card--wide-b { grid-column: span 1; }
     }
     @media (max-width: 520px) {
       .logo { top: 16px; }
@@ -604,8 +668,8 @@
     <div class="dock__glow" aria-hidden="true"></div>
     <div class="dock__cta">
       <!-- dock button -->
-      <a class="btn btn--dark js-download" href="https://github.com/hhj893387-wq/bolt-landing-page/releases/download/v1.0/Bolt-Setup.exe">Download Bolt</a>
-      <p class="dock__note">Available for macOS and Windows</p>
+      <a class="btn btn--dark js-download" href="https://github.com/hhj893387-wq/bolt-landing-page/releases/download/v1.0/Bolt-Setup.exe" rel="noopener">Download Bolt</a>
+      <p class="dock__note">Available for Windows</p>
     </div>
   </div>
 
@@ -629,14 +693,55 @@
       </div>
     </section>
 
-    <!-- 2. Speed -->
-    <section class="section speed" data-bg>
-      <h2 class="headline" data-reveal>
-        Download videos with high <span class="pixel">speeds.</span>
-      </h2>
-      <p class="speed__text" data-reveal style="--d:.15s">
-        Save videos from any site in seconds with high-speed downloads and no limits on quality.
-      </p>
+    <!-- 2. What Bolt offers -->
+    <section class="section offers" id="offers" data-bg>
+      <h2 class="headline offers__title" data-reveal>What bolt <span class="pixel">offers.</span></h2>
+
+      <div class="offers__grid">
+
+        <article class="card card--wide-a" data-reveal style="--d:.05s">
+          <h3 class="card__title">Convert to other formats</h3>
+          <p class="card__text">Download and convert your favorite videos or audio to MP4, MP3, MOV, WebM, and many other output formats.</p>
+          <img class="card__img" src="assets/convert.png" alt="Bolt format conversion options: MP4, MOV, AVI, WMV, AVCHD, WebM, FLV" draggable="false">
+        </article>
+
+        <article class="card card--wide-b" data-reveal style="--d:.1s">
+          <h3 class="card__title">Trim your video</h3>
+          <p class="card__text">Trim your video to remove unwanted parts and shorten its duration, then download the edited version.</p>
+          <img class="card__img" src="assets/trim.png" alt="Bolt trim timeline with start and end handles" draggable="false">
+        </article>
+
+        <article class="card" data-reveal style="--d:.05s">
+          <h3 class="card__title">1800+ websites supported</h3>
+          <p class="card__text">Bolt supports up to 1800+ websites.</p>
+        </article>
+
+        <article class="card" data-reveal style="--d:.1s">
+          <h3 class="card__title">High speed downloads</h3>
+          <p class="card__text">Download your favorite videos or audio in seconds.</p>
+        </article>
+
+        <article class="card" data-reveal style="--d:.15s">
+          <h3 class="card__title">Up to 8K video support</h3>
+          <p class="card__text">Bolt allows you to download any video in 8K.</p>
+        </article>
+
+        <article class="card" data-reveal style="--d:.05s">
+          <h3 class="card__title">Download captions</h3>
+          <p class="card__text">Download your video's captions in any language of your choice.</p>
+        </article>
+
+        <article class="card" data-reveal style="--d:.1s">
+          <h3 class="card__title">Download audio</h3>
+          <p class="card__text">Bolt allows you to download your favorite audio/music in different formats.</p>
+        </article>
+
+        <article class="card" data-reveal style="--d:.15s">
+          <h3 class="card__title">Download playlists</h3>
+          <p class="card__text">You can download your favorite YT playlist with Bolt.</p>
+        </article>
+
+      </div>
     </section>
 
     <!-- 3. How to download -->
@@ -695,10 +800,38 @@
       document.addEventListener('dragstart', function (e) { e.preventDefault(); });
 
       /* ---------- Download the .exe, then go to thanks.html ---------- */
+      var downloading = false;
       Array.prototype.slice.call(document.querySelectorAll('.js-download')).forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          /* the link's own "download" attribute starts the file; redirect shortly after */
-          window.setTimeout(function () { window.location.href = 'thanks.html'; }, 1000);
+        var label = btn.textContent;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();                 // we start the download ourselves
+          if (downloading) return;            // ignore double clicks
+          downloading = true;
+
+          // instant feedback so the button feels responsive
+          btn.textContent = 'Starting download…';
+          btn.style.opacity = '.7';
+          btn.style.pointerEvents = 'none';
+
+          // start the download in a hidden frame (the page stays alive, so it can't be cancelled)
+          var frame = document.createElement('iframe');
+          frame.style.display = 'none';
+          frame.src = btn.href;
+          document.body.appendChild(frame);
+
+          // give the browser time to receive the file before leaving the page
+          window.setTimeout(function () {
+            window.location.href = 'thanks.html';
+          }, 2500);
+
+          // safety: if the user comes back with the back button, reset the button
+          window.addEventListener('pageshow', function () {
+            downloading = false;
+            btn.textContent = label;
+            btn.style.opacity = '';
+            btn.style.pointerEvents = '';
+            frame.remove();
+          }, { once: true });
         });
       });
 
@@ -815,6 +948,32 @@
         });
       } else {
         revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+      }
+
+      /* ---------- Offers masonry: each card's row span = its own height ---------- */
+      var offersGrid = document.querySelector('.offers__grid');
+      var offerCards = offersGrid ? Array.prototype.slice.call(offersGrid.children) : [];
+
+      function layoutOffers() {
+        if (!offersGrid) return;
+        var gap = parseFloat(getComputedStyle(offersGrid).columnGap) || 0;   /* use the same gap vertically */
+        offerCards.forEach(function (card) {
+          card.style.gridRowEnd = 'span ' + Math.ceil(card.offsetHeight + gap);   /* offsetHeight ignores the reveal transform */
+        });
+      }
+
+      if (offersGrid) {
+        layoutOffers();
+        if ('ResizeObserver' in window) {
+          var offersRO = new ResizeObserver(layoutOffers);
+          offerCards.forEach(function (card) { offersRO.observe(card); });   /* fires when images load or text wraps */
+        }
+        Array.prototype.forEach.call(offersGrid.querySelectorAll('img'), function (img) {
+          img.addEventListener('load', layoutOffers);
+        });
+        window.addEventListener('resize', layoutOffers);
+        window.addEventListener('load', layoutOffers);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutOffers);
       }
 
       /* ---------- Background crossfade + parallax + progress + dock ---------- */
