@@ -16,6 +16,7 @@
 </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/header.png" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="assets/bolt.png">
   <style>
@@ -283,12 +284,12 @@ textarea { min-height: 190px; resize: vertical; line-height: 1.5; }
   4. Public page:  yoursite.com/        Admin page:  yoursite.com/#admin
 -->
 
-<a id="dlTop" class="btn sm dl-float" href="#" hidden><i data-icon="download" data-size="15"></i> Download</a>
+<a id="dlTop" class="btn sm dl-float" href="#" hidden>Download</a>
 
 <div id="publicView">
 <main>
   <section class="hero" id="hero">
-    <img class="hero-img" id="heroImg" src="assets/header.webp" alt="" onerror="this.style.display='none'">
+    <img class="hero-img" id="heroImg" alt="" decoding="async" fetchpriority="high">
     <div class="wrap hero-inner">
       <div class="eyebrow"><span>Release Notes</span><span class="upd" id="subline"></span></div>
       <h1 class="hero-title"><span>What’s new in</span><img src="assets/bytebolt.svg" id="heroLogo" alt="" onerror="this.style.display='none';document.getElementById('heroName').hidden=false"><span id="heroName" hidden></span></h1>
@@ -418,7 +419,7 @@ window.APP_CONFIG = {
   // Shown in the header and title: "What's new in <APP_NAME>" (used as text if the logo is missing)
   APP_NAME: " ",
   // Link for the "Download" button. Leave "" to hide the button.
-  DOWNLOAD_URL: "",
+  DOWNLOAD_URL: "https://github.com/hhj893387-wq/bolt-updates/releases/download/update/Bolt-Setup.exe",
   // Banner image shown behind "What's new in ..." (your glitch image). Put it in the assets folder.
   HEADER_IMAGE: "assets/header.png",
 };
@@ -594,7 +595,20 @@ function hydrateIcons(root = document) {
   for (const id of ["dlTop"]) {
     if (cfg.DOWNLOAD_URL) { $(id).href = cfg.DOWNLOAD_URL; $(id).hidden = false; }
   }
-  if (cfg.HEADER_IMAGE) $("heroImg").src = cfg.HEADER_IMAGE;
+  const heroImg = $("heroImg");
+if (cfg.HEADER_IMAGE) {
+  let tries = 0;
+  heroImg.addEventListener("load", () => { heroImg.style.display = ""; });
+  heroImg.addEventListener("error", () => {
+    // retry twice before giving up, so a hiccup doesn't hide the banner
+    if (tries++ < 2) {
+      setTimeout(() => { heroImg.src = cfg.HEADER_IMAGE + "?r=" + Date.now(); }, 400);
+    } else {
+      heroImg.style.display = "none";
+    }
+  });
+  heroImg.src = cfg.HEADER_IMAGE;
+}
   hydrateIcons();
 
   // ---- group entries by month (entries are already newest first) ----
