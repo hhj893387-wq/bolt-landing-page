@@ -72,7 +72,7 @@ i[data-icon] { display: inline-flex; font-style: normal; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  font: inherit; font-size: 14px; font-weight: 700;
+  font: inherit; font-size: 14px; font-weight: 600;
   border: 1px solid var(--text); background: var(--text); color: var(--bg);
   padding: 9px 16px; border-radius: 12px; cursor: pointer; text-decoration: none;
   transition: opacity 0.2s, background 0.2s, color 0.2s, transform 0.15s;
@@ -284,7 +284,7 @@ textarea { min-height: 190px; resize: vertical; line-height: 1.5; }
   4. Public page:  yoursite.com/        Admin page:  yoursite.com/#admin
 -->
 
-<a id="dlTop" class="btn sm dl-float" href="#" hidden>Download</a>
+<a id="dlTop" class="btn sm dl-float" href="#" hidden>Download Bolt</a>
 
 <div id="publicView">
 <main>
@@ -419,7 +419,7 @@ window.APP_CONFIG = {
   // Shown in the header and title: "What's new in <APP_NAME>" (used as text if the logo is missing)
   APP_NAME: " ",
   // Link for the "Download" button. Leave "" to hide the button.
-  DOWNLOAD_URL: "https://github.com/hhj893387-wq/bolt-updates/releases/download/update/Bolt-Setup.exe",
+  DOWNLOAD_URL: "thanks.html",
   // Banner image shown behind "What's new in ..." (your glitch image). Put it in the assets folder.
   HEADER_IMAGE: "assets/header.png",
 };
@@ -592,9 +592,12 @@ function hydrateIcons(root = document) {
   $("appName2").textContent = appName;
   $("heroName").textContent = appName;
   $("year").textContent = new Date().getFullYear();
-  for (const id of ["dlTop"]) {
-    if (cfg.DOWNLOAD_URL) { $(id).href = cfg.DOWNLOAD_URL; $(id).hidden = false; }
-  }
+
+
+// Start the download in a hidden frame, then go to thanks.html
+for (const id of ["dlTop"]) {
+  if (cfg.DOWNLOAD_URL) { $(id).href = cfg.DOWNLOAD_URL; $(id).hidden = false; }
+}
   const heroImg = $("heroImg");
 if (cfg.HEADER_IMAGE) {
   let tries = 0;
