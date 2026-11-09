@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy · ByteBolt</title>
+  <meta name="description" content="How ByteBolt handles your data.">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/header.png" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/bolt.png">
+  <style>
+:root {
+  --bg: #000000;
+  --surface: #0d0d0d;
+  --surface-2: #171717;
+  --line: #232323;
+  --line-2: #3a3a3a;
+  --text: #ffffff;
+  --text-2: #b5b5b5;
+  --text-3: #787878;
+  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "VT323", "Consolas", monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Hero banner (same as What's New) ---------- */
+.hero {
+  position: relative; overflow: hidden; background: #000;
+  height: clamp(350px, 46vw, 430px);
+  isolation: isolate;
+}
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 80%, #000 100%); z-index: 1; pointer-events: none; }
+.hero-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; color: var(--text); display: flex; align-items: center; gap: 14px; }
+.eyebrow .upd { color: var(--text-3); }
+h1.hero-title {
+  font-size: clamp(38px, 6.2vw, 96px); line-height: 1.08; letter-spacing: -0.035em; font-weight: 600;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.1em; margin-top: 4px;
+}
+h1.hero-title img { height: 1em; width: auto; display: block; }
+
+/* ---------- Top nav dock (same as What's New) ---------- */
+.dock {
+  position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 40;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: color-mix(in srgb, #0d0d0d 85%, transparent); backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 0; border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.dock a {
+  display: inline-flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: 8px; text-decoration: none; transition: background .2s, opacity .2s, transform .15s;
+}
+.dock a:active { transform: scale(.97); }
+.dock-icon { width: 44px; }
+.dock-icon img { width: 20px; height: 20px; display: block; }
+.dock-new { flex: 1; min-width: 190px; padding: 0 22px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; opacity: .6; }
+.dock-new:hover { opacity: 1; }
+@media (max-width: 520px) { .dock-new { min-width: 130px; padding: 0 14px; } }
+
+/* ---------- Layout: sidebar + content ---------- */
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px; padding-top: 72px; padding-bottom: 120px; align-items: start; }
+
+.side { position: sticky; top: 96px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none; }
+.side::-webkit-scrollbar { display: none; }
+.side-title { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 8px; }
+.side nav { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.side a {
+  font-size: 15px; color: var(--text-3); text-decoration: none; padding: 4px 0; transition: color 0.2s;
+}
+.side a:hover { color: var(--text-2); }
+.side a.on { color: var(--text); }
+
+/* ---------- Policy content ---------- */
+.doc { opacity: 0; transform: translateY(10px); animation: rise 0.55s var(--ease) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+.rel-date { display: block; font-size: 16px; color: var(--text-3); letter-spacing: -0.01em; }
+.rel-title { font-size: clamp(28px, 5vw, 64px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.08; margin: 6px 0 14px; }
+.lead { color: var(--text); max-width: 62ch; font-size: 18px; line-height: 1.55; }
+
+.sec { padding-top: 56px; scroll-margin-top: 90px; }
+.sec:first-of-type { padding-top: 48px; }
+.body { color: var(--text); max-width: 62ch; font-size: 16px; line-height: 1.55; }
+.body h4 { font-size: 20px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3; margin-bottom: 10px; }
+.body p, .body li { color: var(--text-2); }
+.body p + p, .body p + ul, .body ul + p { margin-top: 10px; }
+.body ul { list-style: none; padding: 0; margin-top: 10px; }
+.body li { position: relative; padding-left: 18px; margin: 5px 0; }
+.body li::before { content: ""; position: absolute; left: 2px; top: 0.7em; width: 5px; height: 5px; background: var(--text-3); border-radius: 50%; }
+.body strong { color: var(--text); font-weight: 600; }
+.body code { font-family: var(--mono); font-size: 1.15em; background: var(--surface-2); padding: 0 6px; border-radius: 6px; }
+.body a { text-decoration: underline; text-underline-offset: 3px; }
+.tag { font-family: var(--mono); font-size: 20px; letter-spacing: 0.04em; color: var(--text-3); display: block; margin-bottom: 4px; }
+
+.note {
+  margin-top: 14px; max-width: 62ch;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; font-size: 15px; color: var(--text-2); line-height: 1.55;
+}
+.note strong { color: var(--text); font-weight: 600; }
+
+.foot { border-top: 1px solid var(--line); padding: 56px 0 40px; }
+.foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+.foot-col h5 {
+  font-family: var(--font); font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
+  color: var(--text); line-height: 1.2; margin-bottom: 10px;
+}
+.foot-col a {
+  display: block; width: fit-content; font-family: var(--font); font-size: 15px; letter-spacing: -0.01em;
+  line-height: 1.5; color: var(--text-3); text-decoration: none; padding: 2px 0;
+  transition: color .2s;
+}
+.foot-col a:hover { color: var(--text); }
+.foot-bottom {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line);
+  font-family: var(--font); font-size: 14px; color: var(--text-3);
+}
+@media (max-width: 700px) { .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; gap: 0; padding-top: 0; }
+  .side {
+    position: sticky; top: 0; z-index: 20; max-height: none; overflow-x: auto;
+    background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(12px);
+    padding: 12px 24px; margin: 0 -24px 8px; border-bottom: 1px solid var(--line);
+  }
+  .side-title { display: none; }
+  .side nav { flex-direction: row; gap: 18px; }
+  .side a { white-space: nowrap; padding: 2px 0; }
+  .eyebrow { font-size: 19px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .doc { opacity: 1; transform: none; }
+}
+  </style>
+</head>
+<body>
+
+<main>
+  <section class="hero">
+    <img class="hero-img" src="assets/header.png" alt="" decoding="async" fetchpriority="high" onerror="this.style.display='none'">
+    <div class="wrap hero-inner">
+      <div class="eyebrow"><span>Legal</span><span class="upd">Updated November 9, 2026</span></div>
+      <h1 class="hero-title"><span>Privacy policy of</span><img src="assets/bytebolt.svg" alt="ByteBolt"></h1>
+    </div>
+  </section>
+
+  <div class="wrap layout">
+    <aside class="side" aria-label="Jump to section">
+      <div class="side-title">Contents</div>
+      <nav id="toc">
+        <a href="#summary">Summary</a>
+        <a href="#collect">What Bolt collects</a>
+        <a href="#not-collect">What it never collects</a>
+        <a href="#protect">How it is protected</a>
+        <a href="#choice">Your choice</a>
+        <a href="#device">On your device</a>
+        <a href="#third">Third parties</a>
+        <a href="#rights">Deleting your data</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </aside>
+
+    <div class="doc">
+      <p class="lead">Bolt is a free video downloader made by one person. This page explains, in plain words, what data Bolt and this website handle and what they do not.</p>
+
+      <section class="sec" id="summary">
+        <div class="body">
+          <h4>Summary</h4>
+          <ul>
+            <li>Bolt has <strong>no accounts</strong>, no ads, and no tracking of what you download.</li>
+            <li>The app can send <strong>anonymous usage statistics</strong> to help me fix bugs and improve Bolt. You can turn this off in Settings.</li>
+            <li>I never collect the links you paste, video titles, or your files.</li>
+            <li>I do not sell or share your data.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sec" id="collect">
+        <div class="body">
+          <h4>What Bolt collects</h4>
+          <p>When anonymous analytics is on, Bolt records short events about how the app is used. Each event contains:</p>
+          <ul>
+            <li>A <strong>random install ID</strong> and a random session ID. They are made on your computer and are not linked to your name, email, or Windows account.</li>
+            <li>The event name, the Bolt version, your Windows version, and the time.</li>
+            <li><strong>Event details</strong> such as: which screen or button was used, which options you picked (quality, format, convert, subtitles, scope), which features you used (trim, playlist, rename, queue), whether a download finished, failed, or was cancelled, the site name and format of a finished download, a short error category, how long a session lasted, and how long it took to start the first download.</li>
+            <li><strong>Crash location</strong> if the app crashes: the error type, function name, file name, and line number only.</li>
+          </ul>
+          <p>This helps me see which features matter, where people get stuck, and what is crashing.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="not-collect">
+        <div class="body">
+          <h4>What it never collects</h4>
+          <ul>
+            <li>The links you paste, video titles, channel names, or your download history.</li>
+            <li>Your downloaded files or anything in your save folder.</li>
+            <li>Your name, email address, phone number, or any account details.</li>
+            <li>Error messages, because they can contain file paths or links. Only the crash location is sent.</li>
+            <li>Passwords, cookies, or browsing history.</li>
+          </ul>
+          <p>Bolt only accepts a fixed list of event types, and text values are cut short, so a bug cannot send long text such as a link or a title by accident.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="protect">
+        <div class="body">
+          <h4>How it is protected</h4>
+          <p>Event details are <strong>encrypted on your computer</strong> before they are sent. Bolt only holds a public key, which can lock data but cannot unlock it. Only I hold the private key needed to read the details.</p>
+          <p>The app's connection to the database can only <strong>add</strong> new rows. It cannot read, change, or delete anything.</p>
+          <div class="note"><strong>About IP addresses.</strong> Any internet request reveals your IP address to the server that receives it. Bolt does not put your IP address in the analytics data. The database provider may keep standard server logs as part of running their service.</div>
+        </div>
+      </section>
+
+      <section class="sec" id="choice">
+        <div class="body">
+          <h4>Your choice</h4>
+          <p>You can turn anonymous analytics off at any time in Bolt's <strong>Settings</strong>. When it is off, nothing is recorded or sent, and any events waiting on your computer are deleted.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="device">
+        <div class="body">
+          <h4>On your device</h4>
+          <p>Bolt stores a few files on your computer:</p>
+          <ul>
+            <li>A settings file, which includes your preferences and your random install ID.</li>
+            <li>A small queue file with analytics events that have not been sent yet (for example, when you are offline). It is deleted after sending or when you turn analytics off.</li>
+            <li>The videos and audio you download, in the folder you choose. These never leave your computer.</li>
+          </ul>
+          <p>Uninstalling Bolt and deleting its data folder removes all of this.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="third">
+        <div class="body">
+          <h4>Third parties</h4>
+          <p>I do not sell your data and I do not share it for advertising. The only service involved is <strong>Supabase</strong>, which stores the encrypted analytics events.</p>
+          <p>When you download a video, Bolt connects directly from your computer to the site that hosts it. That site has its own privacy policy.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="rights">
+        <div class="body">
+          <h4>Deleting your data</h4>
+          <p>Analytics data is tied only to a random install ID, so I cannot find it by your name or email. If you want your analytics data deleted, email me your install ID (it is stored in Bolt's settings file) and I will delete the rows linked to it. You can also turn analytics off at any time.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="contact">
+        <div class="body">
+          <h4>Contact</h4>
+          <p>Questions about privacy? Email <a href="mailto:support@bytebolt.app">support@bytebolt.app</a>. It is a one-person project, so every message is read.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h5>Product</h5>
+        <a href="index.html">Home</a>
+        <a href="whatsnew.html">Changelog</a>
+        
+      </div>
+      <div class="foot-col">
+        <h5>Resources</h5>
+        <a href="mailto:support@bytebolt.app">Help</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="eula.html">Eula</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="about.html">About Bolt</a>
+      </div>
+    </div>
+    <div class="foot-bottom">© <span id="year"></span> ByteBolt</div>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Quick links">
+  <a class="dock-icon" href="index.html" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt=""></a>
+  <a class="dock-new" href="whatsnew.html">What’s New</a>
+</nav>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* highlight the section currently on screen */
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+    var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var ticking = false;
+    function spy() {
+      ticking = false;
+      var cur = 0;
+      secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top <= 150) cur = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+      var on = links[cur];
+      if (on && window.matchMedia('(max-width: 860px)').matches) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(spy); }
+    }, { passive: true });
+    spy();
+  })();
+</script>
+
+</body>
+</html>

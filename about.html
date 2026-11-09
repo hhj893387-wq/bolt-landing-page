@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About</title>
+  <meta name="description" content="About ByteBolt.">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@700&family=Homemade+Apple&family=Plus+Jakarta+Sans:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/bolt.png">
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+:root {
+  /* ---------- Same tokens as the landing page ---------- */
+  --bg: #000;
+  --text: #fff;
+  --muted: 0.55;
+  --border: #3e3e3e;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-pixel: "VT323", monospace;
+  --font-logo: "Arimo", Arial, sans-serif;
+  --font-sig: "Homemade Apple", "Segoe Script", "Brush Script MT", cursive;
+  --pad-x: clamp(24px, 5.5vw, 80px);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  /* type scale (identical to the landing page) */
+  --fs-h: clamp(28px, 3.3vw, 44px);          /* section headlines */
+  --fs-lead: clamp(16px, 1.35vw, 19px);      /* intro text, card labels, FAQ questions */
+  --fs-tab-title: clamp(18px, 1.6vw, 22px);  /* step titles */
+  --fs-small: clamp(14px, 1.1vw, 16px);      /* card text, FAQ answers */
+  --fs-card-title: clamp(20px, 2vw, 28px);
+  --fs-nav: 16px;
+  --fs-btn: 17px;
+  --fs-pixel: 1.3em;                         /* pixel-font accent words */
+
+  /* About-only sizes */
+  --fs-hero: clamp(38px, 6.2vw, 96px);       /* banner title */
+  --fs-hero-sub: clamp(16px, 1.6vw, 20px);   /* banner sentence */
+  --fs-subtitle: clamp(26px, 3vw, 36px);     /* "Just one man" */
+  --fs-signature: 24px;
+
+  /* font weights (identical to the landing page) */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* signature animation */
+  --sig-duration: 2.2s;
+  --sig-delay: 0.2s;
+
+  --foot-h: 160px;                           /* space reserved for the footer inside the dock */
+  --v2: calc(clamp(170px, 30svh, 280px) + var(--foot-h));   /* dock height at the bottom of the page */ 
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: var(--fw-medium);
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--pad-x); }
+
+/* ---------- Headlines (same style as the landing page) ---------- */
+.headline {
+  margin: 0;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.headline img { display: inline-block; height: 1em; width: auto; vertical-align: -0.14em; }
+.pixel {
+  font-family: var(--font-pixel);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-pixel);
+  line-height: 1;
+  letter-spacing: 0;
+}
+.sec-head { text-align: center; margin-bottom: clamp(32px, 6vh, 64px); }
+
+/* ---------- Reveal on scroll (same as the landing page) ---------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------- Logo + top nav dock (same as the landing page) ---------- */
+.logo {
+  position: fixed; top: 20px; left: clamp(20px, 3.4vw, 49px); z-index: 50;
+  line-height: 1; text-decoration: none;
+  transition: opacity .4s ease;
+}
+.logo.is-hidden { opacity: 0; pointer-events: none; }
+.logo img { height: 20px; width: auto; }
+
+.navdock {
+  position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 55;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: color-mix(in srgb, #0d0d0d 85%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.navdock a {
+  display: inline-flex; align-items: center; justify-content: center; height: 44px;
+  border-radius: 8px; text-decoration: none; color: #fff;
+  transition: background .2s, opacity .2s, transform .15s;
+}
+.navdock a:active { transform: scale(.97); }
+.navdock-icon { width: 44px; }
+.navdock-icon img { width: 20px; height: 20px; }
+.navdock-new { min-width: 190px; padding: 0 22px; font-size: var(--fs-nav); font-weight: var(--fw-semibold); letter-spacing: -0.01em; opacity: .6; }
+.navdock-new:hover { opacity: 1; }
+@media (max-width: 520px) { .navdock-new { min-width: 130px; padding: 0 14px; } .logo { top: 16px; } .logo img { height: 17px; } }
+
+/* ---------- Hero banner ---------- */
+.hero {
+  position: relative; overflow: hidden; background: #000;
+  height: clamp(350px, 46vw, 430px);   /* was clamp(350px, 46vw, 430px) */
+  isolation: isolate;
+}
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 88%, #000 100%); z-index: 1; pointer-events: none; }
+.hero-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding-bottom: 0; }
+h1.hero-title {
+  margin: 0;
+  font-size: var(--fs-hero); font-weight: var(--fw-semibold);
+  line-height: 1.08; letter-spacing: -0.035em;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.25em;
+}
+h1.hero-title img { height: 1em; width: auto; display: block; }
+.hero-sub {
+  margin: 8px 0 0;
+  font-size: var(--fs-hero-sub); font-weight: var(--fw-medium); letter-spacing: -0.01em;
+  line-height: 1.4; max-width: 34ch; color: var(--text);
+}
+
+/* ---------- Sections ---------- */
+section.block { padding: clamp(64px, 10vh, 120px) 0; }
+
+/* ---------- Cards (same as the landing page) ---------- */
+.card {
+  background: #050505;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: clamp(22px, 2.6vw, 38px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card__title {
+  margin: 0;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-card-title);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.card__text {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+}
+.card__img {
+  width: 100%; height: auto; margin-top: 12px;
+  border-radius: 8px; border: 1px solid var(--border);
+}
+
+/* ---------- Buttons (same as the landing page) ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: min(300px, 100%); height: 56px;
+  background: #fff; color: #000; border-radius: 8px;
+  font-family: var(--font-body); font-weight: var(--fw-medium); font-size: var(--fs-btn);
+  text-decoration: none;
+  transition: transform .25s var(--ease), background .25s ease;
+}
+.btn:hover { transform: translateY(-2px); background: #e9e9e9; }
+.btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* ---------- Goal ---------- */
+.goal { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(32px, 5vw, 64px); align-items: center; }
+.goal .headline { margin-bottom: 16px; }
+.goal__text { margin: 0; font-size: var(--fs-lead); line-height: 1.7; color: rgba(255, 255, 255, 0.85); max-width: 44ch; }
+.goal-img {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+  border-radius: 28px; border: 1px solid #2a2a2a; background: #050505;
+}
+
+/* ---------- How to download ---------- */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); }
+.step__num { font-size: var(--fs-small); line-height: 1.2; letter-spacing: 0.14em; opacity: var(--muted); }
+.step__title { margin: 0; font-size: var(--fs-tab-title); font-weight: var(--fw-medium); line-height: 1.35; }
+
+/* ---------- Who ---------- */
+.who-sub {
+  margin: 0 0 28px; text-align: center;
+  font-size: var(--fs-subtitle); font-weight: var(--fw-semibold); letter-spacing: -0.03em; line-height: 1.3;
+}
+.dev-card { max-width: 760px; margin: 0 auto; }
+.dev-top { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.signature.is-held { cursor: grabbing; }
+.signature.is-lifted { z-index: 30; }              /* above the dock while it is being thrown, back to normal once it is home */
+.sig-hint {
+  margin-left: auto;
+  font-family: var(--font-pixel); font-size: calc(var(--fs-lead) * 1.3); line-height: 1;
+  color: rgba(255, 255, 255, var(--muted));
+  transition: opacity .4s ease;
+}
+.sig-hint.is-gone { opacity: 0; }
+.dev-role { font-size: var(--fs-lead); color: rgba(255, 255, 255, var(--muted)); }
+.dev-quote { margin: 0; font-size: var(--fs-lead); line-height: 1.7; color: rgba(255, 255, 255, 0.85); }
+
+/* Signature: "written" left to right when it scrolls into view, click to replay */
+.signature {
+  font-family: var(--font-sig); font-size: var(--fs-signature); font-weight: 400;
+  line-height: 1.5; color: var(--text); white-space: nowrap; display: inline-block;
+  padding: 0 0.3em 0.1em 0.05em;
+  position: relative;                              /* raised above the dock only while held or flying (.is-lifted) */
+  cursor: grab; touch-action: none; will-change: transform;
+  -webkit-user-select: none; user-select: none; -webkit-user-drag: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 40%, transparent 46%);
+          mask-image: linear-gradient(90deg, #000 0, #000 40%, transparent 46%);
+  -webkit-mask-size: 250% 100%; mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0; mask-position: 0 0;
+}
+.js .signature:not(.write) { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+.js .signature.write { animation: write var(--sig-duration) cubic-bezier(0.45, 0.05, 0.35, 1) var(--sig-delay) both; }
+@keyframes write {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  to   { -webkit-mask-position: 0 0;    mask-position: 0 0; }
+}
+
+/* ---------- FAQ ---------- */
+.faq { display: grid; gap: 12px; max-width: 760px; margin: 0 auto; }
+.faq details.card { padding: 0; gap: 0; }
+.faq summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px clamp(22px, 2.6vw, 38px);
+  font-size: var(--fs-lead); font-weight: var(--fw-medium); letter-spacing: -0.01em; line-height: 1.35;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: ""; flex: none; width: 8px; height: 8px;
+  border-right: 2px solid rgba(255, 255, 255, 0.6); border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .4s var(--ease);
+}
+/* arrow follows the open/closing state, not the [open] attribute, so it animates in sync */
+.faq details.is-open summary::after { transform: rotate(-135deg) translateY(-2px); }
+
+/* animated answer panel: the JS animates this wrapper's height */
+.faq .faq-body {
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: height .4s var(--ease), opacity .4s var(--ease);
+}
+.faq details.is-open .faq-body { opacity: 1; }
+.faq .card__text { padding: 0 clamp(22px, 2.6vw, 38px) 22px; max-width: 60ch; }
+
+/* ---------- Contact ---------- */
+.support { max-width: 640px; margin: 0 auto; }
+.support-head { display: flex; align-items: center; gap: 10px; font-size: var(--fs-lead); font-weight: var(--fw-medium); letter-spacing: -0.01em; }
+.support-head svg { width: 16px; height: 16px; flex: none; }
+.mail-link {
+  align-self: flex-start; margin-top: 6px;
+  font-size: var(--fs-lead); font-weight: var(--fw-medium); letter-spacing: -0.01em;
+  color: var(--text); text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35); text-underline-offset: 5px; text-decoration-thickness: 1px;
+  transition: text-decoration-color .25s ease, opacity .25s ease;
+}
+.mail-link:hover { text-decoration-color: #fff; }
+.mail-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 4px; }
+
+/* ---------- Final CTA (same layout as the landing page) ---------- */
+.cta {
+  position: relative; overflow: hidden;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 120px var(--pad-x) calc(var(--v2) + 40px);
+}
+.cta__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.cta::before {   /* blends the background image into the black page above it */
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, #000 0%, transparent 40%);
+}
+.cta__title { position: relative; z-index: 2; max-width: 12em; }
+/* ---------- Download dock (same as the landing page) ----------
+   Fixed to the bottom of the screen. It shrinks as you scroll (--k: 0 -> 1)
+   and grows taller again when the final CTA section arrives (--g: 0 -> 1). */
+.dock {
+  --k: 0;      /* shrink progress, set by JS */
+  --g: 0;      /* grow progress (0 -> 1 at the final section), set by JS */
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  --v0: clamp(150px, 22svh, 230px);                 /* visible glow height at the start */
+  --v1: 124px;                                       /* visible glow height when small (always fits the button) */
+  --vb: calc(var(--v0) - var(--k) * (var(--v0) - var(--v1)));
+  --v: calc(var(--vb) + var(--g) * (var(--v2) - var(--vb)));   /* grows taller at the final section */
+  height: var(--v);
+  pointer-events: none;
+}
+.dock__glow {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--v) * -1);
+  width: 120vw;
+  height: calc(var(--v) * 2);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #1f1e1e 0%, #090909 35%, #3e3e3e 80%);
+  box-shadow: 0 -14px 50px 6px rgba(23, 23, 23, 0.55), 0 -2px 18px rgba(37, 37, 37, 0.8);
+}
+.dock__cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px + var(--g) * (clamp(8px, 2.5svh, 28px) + var(--foot-h)));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0 var(--pad-x);
+  transform: scale(calc(1 - var(--k) * 0.15));
+  transform-origin: 50% 100%;
+}
+.dock__cta .btn { pointer-events: auto; }
+/* ---------- Footer inside the dock ---------- */
+.dock__foot {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: var(--foot-h);
+  padding: 0 var(--pad-x) 31px;
+  display: flex; flex-direction: column; justify-content: center;
+  opacity: calc((var(--g) - 0.5) * 2);       /* fades in during the last half of the grow */
+}
+.foot-wrap { width: 100%; }
+.foot-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+.foot-brand {
+  height: clamp(28px, 3.6vw, 52px);
+  width: auto; max-width: none;
+  margin-left: auto; flex-shrink: 0;
+}
+.foot-cols { display: grid; grid-template-columns: repeat(3, max-content); gap: 16px clamp(82px, 18vw, 228px); }
+.foot-col h5 {
+  margin: 0 0 8px; font-family: var(--font-body); font-weight: var(--fw-semibold);
+  font-size: 12px; letter-spacing: -0.01em; line-height: 1.2; color: #fff;
+}
+.foot-col a {
+  display: block; width: fit-content; padding: 2px 0;
+  font-family: var(--font-body); font-weight: var(--fw-regular);
+  font-size: 12px; letter-spacing: -0.01em; line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color .2s;
+  pointer-events: none;                      /* links only work once the footer is visible */
+}
+.dock.is-end .foot-col a { pointer-events: auto; }
+.foot-col a:hover { color: #fff; }
+.foot-bottom {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 12px; color: rgba(255, 255, 255, 0.3);
+}
+@media (max-width: 700px) {
+  .foot-top { flex-direction: column; align-items: flex-start; }
+  .foot-brand { margin-left: 0; }
+}
+
+.dock__note {
+  margin: calc(14px * (1 - var(--k))) 0 0;
+  font-size: var(--fs-small);
+  color: rgba(234, 233, 233, 0.6);
+  max-height: calc(30px * (1 - var(--k)));   /* collapses as it shrinks */
+  opacity: calc(1 - var(--k) * 1.6);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn__icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .goal { grid-template-columns: 1fr; }
+  .goal-img { max-width: 360px; }
+  .steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) { .btn { height: 52px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .js .signature:not(.write) { -webkit-mask-position: 0 0; mask-position: 0 0; }
+}
+  </style>
+</head>
+<body>
+
+<nav class="navdock" aria-label="Quick links">
+  <a class="navdock-icon" href="index.html" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt=""></a>
+  <a class="navdock-new" href="whatsnew.html">What’s New</a>
+</nav>
+<a class="logo" href="index.html" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt"></a>
+
+<!-- Download dock: stays on screen, shrinks while scrolling, grows at the final CTA section -->
+<div class="dock" aria-label="Download Bolt">
+  <div class="dock__glow" aria-hidden="true"></div>
+  <div class="dock__cta">
+    <a class="btn" href="thanks.html">
+      <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M3 5.6 10.4 4.6v6.8H3V5.6Zm8.4-1.1L21 3v8.4h-9.6V4.5ZM3 12.6h7.4v6.8L3 18.4v-5.8Zm8.4 0H21V21l-9.6-1.4v-7Z"/>
+      </svg>
+      <span>Download Bolt</span>
+    </a>
+    <p class="dock__note"></p>
+  </div>
+
+  <footer class="dock__foot">
+    <div class="foot-wrap">
+      <div class="foot-top">
+        <div class="foot-cols">
+          <div class="foot-col">
+            <h5>Product</h5>
+            <a href="index.html">Home</a>
+            <a href="whatsnew.html">Changelog</a>
+          </div>
+          <div class="foot-col">
+            <h5>Resources</h5>
+            <a href="mailto:support@bytebolt.app">Help</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="eula.html">Eula</a>
+          </div>
+          <div class="foot-col">
+            <h5>Company</h5>
+            <a href="about.html">About Bolt</a>
+          </div>
+        </div>
+        <img class="foot-brand" src="assets/bytebolt.svg" alt="ByteBolt" draggable="false">
+      </div>
+      <div class="foot-bottom">© <span id="year"></span> ByteBolt</div>
+    </div>
+  </footer>
+</div>
+
+<header class="hero">
+  <img class="hero-img" src="assets/header.png" alt="" onerror="this.style.display='none'">
+  <div class="wrap hero-inner">
+    <h1 class="hero-title"><span>About</span><img src="assets/ByteBolt.png" alt="ByteBolt"></h1>
+    <p class="hero-sub">Bolt is a modern video downloader built on a simple promise fast, free, safe and no ads.</p>
+  </div>
+</header>
+
+<main>
+  <section class="block">
+    <div class="wrap goal">
+      <div data-reveal>
+        <h2 class="headline">My <span class="pixel">goal.</span></h2>
+        <p class="goal__text">I got tired of downloaders packed with ads, trackers, and bundled junk. So I built one that stays out of your way. Bolt is free, has no ads, and collects no hidden data.</p>
+      </div>
+      <img class="goal-img" src="assets/goal.png" alt="" data-reveal style="--d:.1s">
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2 class="headline sec-head" data-reveal>How to download <span class="pixel">videos</span></h2>
+      <div class="steps">
+        <article class="card step" data-reveal style="--d:.05s">
+          <span class="step__num">01</span>
+          <h3 class="step__title">Paste a link</h3>
+          <p class="card__text">Copy the video link from your browser or app and paste it into Bolt.</p>
+          <img class="card__img" src="assets/step-1.png" alt="Pasting a video link into Bolt" onerror="this.style.display='none'">
+        </article>
+        <article class="card step" data-reveal style="--d:.1s">
+          <span class="step__num">02</span>
+          <h3 class="step__title">Pick quality or format</h3>
+          <p class="card__text">Choose the resolution or format you want.</p>
+          <img class="card__img" src="assets/step-2.png" alt="Choosing video quality and format in Bolt" onerror="this.style.display='none'">
+        </article>
+        <article class="card step" data-reveal style="--d:.15s">
+          <span class="step__num">03</span>
+          <h3 class="step__title">Download</h3>
+          <p class="card__text">Hit download and the file is saved to your device.</p>
+          <img class="card__img" src="assets/step-3.png" alt="Bolt showing the video saved" onerror="this.style.display='none'">
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2 class="headline sec-head" data-reveal style="margin-bottom:clamp(20px,3vh,32px)">Who is behind <img src="assets/bytebolt.png" alt="ByteBolt"></h2>
+      <h3 class="who-sub" data-reveal>Just one man</h3>
+      <div class="card dev-card" data-reveal style="--d:.1s">
+        <div class="dev-top">
+          <span class="signature" id="signature" role="img" aria-label="Zain" title="Pick me up and throw me">Zain</span>
+          <span class="dev-role">Developer</span>
+          <span class="sig-hint" aria-hidden="true"></span>
+        </div>
+        <p class="dev-quote">One day, I was looking for a video downloader, and I found one, but it was filled with ads and popups, and it also had malware, so I decided to create my own. This is how Bolt was born.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2 class="headline sec-head" data-reveal>Common <span class="pixel">questions.</span></h2>
+      <div class="faq">
+        <details class="card" data-reveal style="--d:.05s">
+          <summary>Is Bolt really free?</summary>
+          <p class="card__text">Yes. Bolt is free to use with no ads and no subscriptions.</p>
+        </details>
+        <details class="card" data-reveal style="--d:.1s">
+          <summary>Is Bolt safe?</summary>
+          <p class="card__text">Yes. no adware and no malware. It is built to stay out of your way.</p>
+        </details>
+        <details class="card" data-reveal style="--d:.2s">
+          <summary>Which sites and formats are supported?</summary>
+          <p class="card__text">Bolt supports 1800+ websites. Paste a link and pick the quality or format you want before you download.</p>
+        </details>
+        <details class="card" data-reveal style="--d:.25s">
+          <summary>How do I report a bug or request a feature?</summary>
+          <p class="card__text">Email support@bytebolt.app. It is a one person project so every message is read by me.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2 class="headline sec-head" data-reveal>Get in <span class="pixel">touch.</span></h2>
+      <div class="card support" data-reveal style="--d:.1s">
+        <div class="support-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Support
+        </div>
+        <p class="card__text">Questions about your account, billing or data. Every plan includes email support, and we reply within one business day.</p>
+        <a class="mail-link" href="mailto:support@bytebolt.app">support@bytebolt.app</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA: same layout as the landing page -->
+<!-- spacer so the last section isn't hidden behind the fixed dock -->
+<div style="height: calc(var(--v2) + 24px)" aria-hidden="true"></div>
+</main>
+
+<script>
+  (function () {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Reveal on scroll (same as the landing page) ---------- */
+    var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+      revealEls.forEach(function (el) { io.observe(el); });
+    } else {
+      revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+
+    /* ---------- Download dock: small while scrolling, bigger in the CTA section (same as the landing page) ---------- */
+var dock = document.querySelector('.dock');
+var logo = document.querySelector('.logo');
+var dockTicking = false;
+document.getElementById('year').textContent = new Date().getFullYear();
+
+    function smooth(t) {
+      t = Math.max(0, Math.min(1, t));
+      return t * t * (3 - 2 * t);
+    }
+
+
+function updateDock() {
+  dockTicking = false;
+  if (!dock) return;
+  var vh = window.innerHeight;
+  var y = window.pageYOffset || document.documentElement.scrollTop;
+  var docH = document.documentElement.scrollHeight - vh;
+  var k = smooth(y / (vh * 0.6));                          /* shrinks as you scroll down */
+  var g = smooth(1 - (docH - y) / (vh * 0.9));             /* grows over the last 90% of a screen of scrolling */
+  dock.style.setProperty('--k', (k * (1 - g)).toFixed(3));
+  dock.style.setProperty('--g', g.toFixed(3));
+  dock.classList.toggle('is-end', g > 0.9);
+  if (logo) logo.classList.toggle('is-hidden', g > 0.05);  /* top-left logo hides once the footer arrives */
+}
+
+    function onDockScroll() {
+      if (!dockTicking) {
+        dockTicking = true;
+        window.requestAnimationFrame(updateDock);
+      }
+    }
+
+    window.addEventListener('scroll', onDockScroll, { passive: true });
+    window.addEventListener('resize', onDockScroll);
+    window.addEventListener('load', updateDock);
+    updateDock();
+
+    /* ---------- Signature: written when it scrolls into view, click to replay ---------- */
+    var sig = document.getElementById("signature");
+    if (!sig) return;
+    var play = function () { sig.classList.add("write"); };
+    if (!("IntersectionObserver" in window)) { play(); return; }
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { play(); sio.disconnect(); } });
+    }, { threshold: 0.6 });
+    sio.observe(sig);
+  })();
+
+  /* ---------- Signature: pick it up and throw it like a ball ----------
+     Drag it with the mouse or your finger and let go. It flies with your throw and bounces like a
+     ball. It never rotates. It stays on screen while you scroll, rests on the dock, and the dock
+     pushes it up when it grows. Once its spot in the card is on screen again, it bounces back home.
+     A quick tap (no drag) replays the "written" animation. */
+  (function () {
+    var sig = document.getElementById('signature');
+    if (!sig) return;
+    var hint = document.querySelector('.sig-hint');
+    var dockEl = document.querySelector('.dock');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var GRAVITY = 2600;        /* px/s² pulling it down */
+    var BOUNCE = 0.74;         /* speed kept after hitting the floor (1 = never stops bouncing) */
+    var WALL_BOUNCE = 0.8;     /* speed kept after hitting a wall or the top of the screen */
+    var AIR_DRAG = 0.12;       /* slows it slightly while flying */
+    var ROLL_FRICTION = 2.2;   /* slows it down while it touches the floor */
+    var REST_SPEED = 90;       /* px/s: slower than this and the bounce is too small, so it rests */
+    var RETURN_AFTER = 2200;   /* ms it rests before bouncing back home */
+    var MAX_SPEED = 3800;      /* px/s throw speed limit */
+
+    var x = 0, y = 0, vx = 0, vy = 0;                 /* offset from its spot in the card, and its speed */
+    var lifted = false, dragging = false, hopping = false, resting = false;
+    var raf = 0, hopRaf = 0, returnTimer = 0, lastT = 0;
+    var gx = 0, gy = 0, moved = 0, downT = 0, samples = [];
+    var lastScrollX = window.pageXOffset, lastScrollY = window.pageYOffset;
+    var lastFloorV = null, touching = false;
+
+    function apply() { sig.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'; }
+
+    function setLifted(on) {   /* raised above the dock only while it is away from home */
+      lifted = on;
+      sig.classList.toggle('is-lifted', on);
+    }
+
+    function readCurrent() {
+      var t = getComputedStyle(sig).transform;
+      if (t && t !== 'none') { var m = new DOMMatrix(t); x = m.e; y = m.f; }
+      else { x = 0; y = 0; }
+    }
+
+    function homeCenter() {    /* where the signature's centre is when it is not moved */
+      var r = sig.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - x, y: r.top + r.height / 2 - y };
+    }
+
+    function homeVisible() {   /* is its spot in the card on screen (above the dock)? */
+      var h = homeCenter();
+      return h.y > 40 && h.y < window.innerHeight - 140;
+    }
+
+    function bounds() {        /* the screen, with the top of the dock as the floor */
+      var h = homeCenter();
+      var hw = sig.offsetWidth / 2, hh = sig.offsetHeight / 2;
+      var floor = window.innerHeight;
+      if (dockEl) floor = Math.min(floor, dockEl.getBoundingClientRect().top + 14);
+      var floorV = floor - hh;                            /* floor height in screen coordinates */
+      return {
+        minX: 8 + hw - h.x,
+        maxX: document.documentElement.clientWidth - 8 - hw - h.x,
+        minY: 8 + hh - h.y,
+        maxY: floorV - h.y,
+        floorV: floorV
+      };
+    }
+
+    function landHome() {
+      cancelAnimationFrame(raf); cancelAnimationFrame(hopRaf); clearTimeout(returnTimer);
+      x = 0; y = 0; vx = 0; vy = 0; apply();
+      hopping = false; resting = false; touching = false; lastFloorV = null;
+      setLifted(false);
+    }
+
+    function hopHome() {       /* bounces back to its spot in a few hops that get smaller */
+      cancelAnimationFrame(raf); cancelAnimationFrame(hopRaf); clearTimeout(returnTimer);
+      resting = false; hopping = true;
+      var x0 = x, y0 = y, dx = -x0, dy = -y0;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 4) { landHome(); return; }
+
+      var h1 = Math.min(200, dist * 0.35 + 40);
+      var hops = [                                        /* f = how far along the way, h = hop height (px) */
+        { f: 0.5,  h: h1 },
+        { f: 0.78, h: h1 * 0.45 },
+        { f: 0.93, h: h1 * 0.2 },
+        { f: 1,    h: h1 * 0.09 }
+      ];
+      hops.forEach(function (hp) { hp.d = 44 * Math.sqrt(hp.h); });   /* higher hops take longer, like a real ball */
+
+      var idx = 0, fromX = x0, fromY = y0, segStart = performance.now();
+
+      function stepHop(now) {
+        var hp = hops[idx];
+        var t = Math.min(1, (now - segStart) / hp.d);
+        var tx = x0 + dx * hp.f, ty = y0 + dy * hp.f;
+        x = fromX + (tx - fromX) * t;
+        y = fromY + (ty - fromY) * t - hp.h * 4 * t * (1 - t);   /* arc up and back down */
+        apply();
+        if (t >= 1) {
+          fromX = tx; fromY = ty; idx++; segStart = now;
+          if (idx >= hops.length) { landHome(); return; }
+        }
+        hopRaf = requestAnimationFrame(stepHop);
+      }
+      hopRaf = requestAnimationFrame(stepHop);
+    }
+
+    function tryReturn() {     /* bounce home as soon as its spot is on screen */
+      if (!lifted || dragging || hopping) return;
+      if (homeVisible()) hopHome();
+      else returnTimer = setTimeout(tryReturn, 400);
+    }
+    function scheduleReturn() {
+      clearTimeout(returnTimer);
+      returnTimer = setTimeout(tryReturn, RETURN_AFTER);
+    }
+
+    function replayWrite() {
+      sig.classList.remove('write'); void sig.offsetWidth; sig.classList.add('write');
+    }
+
+    function step(now) {
+      var dt = Math.min(0.032, (now - lastT) / 1000);
+      lastT = now;
+      if (dt <= 0) { raf = requestAnimationFrame(step); return; }
+      var b = bounds();
+
+      if (touching && lastFloorV !== null) {              /* the dock rising pushes the ball up */
+        var fv = (b.floorV - lastFloorV) / dt;
+        if (fv < -120) vy = Math.min(vy, fv);
+      }
+      lastFloorV = b.floorV;
+
+      vy += GRAVITY * dt;
+      var drag = Math.max(0, 1 - AIR_DRAG * dt);
+      vx *= drag; vy *= drag;
+      x += vx * dt; y += vy * dt;
+
+      if (x < b.minX) { x = b.minX; vx = Math.abs(vx) * WALL_BOUNCE; }
+      else if (x > b.maxX) { x = b.maxX; vx = -Math.abs(vx) * WALL_BOUNCE; }
+      if (y < b.minY) { y = b.minY; vy = Math.abs(vy) * WALL_BOUNCE; }
+
+      var onFloor = false;
+      if (y >= b.maxY) {
+        y = b.maxY;
+        vx *= Math.max(0, 1 - ROLL_FRICTION * dt);
+        if (vy > REST_SPEED) vy = -vy * BOUNCE;           /* bounce */
+        else if (vy >= 0) { vy = 0; onFloor = true; }     /* rest on the floor */
+        /* vy < 0: the floor is pushing it up, so it keeps its upward speed */
+      }
+      touching = y >= b.maxY - 0.5;
+
+      if (onFloor && Math.abs(vx) < 10) {
+        vx = 0;
+        if (!resting) { resting = true; scheduleReturn(); }
+      } else if (resting) {
+        resting = false; clearTimeout(returnTimer);
+      }
+
+      apply();
+      raf = requestAnimationFrame(step);                  /* keeps running while it is away from home, so the dock can move it */
+    }
+
+    if (reduce) {   /* reduced motion: no throwing, a tap still replays the signature */
+      sig.style.cursor = 'pointer';
+      sig.addEventListener('click', replayWrite);
+      if (hint) hint.style.display = 'none';
+      return;
+    }
+
+    /* while it is away from home it stays where it is on the screen, so it travels up and down the page with you */
+    window.addEventListener('scroll', function () {
+      var sx = window.pageXOffset, sy = window.pageYOffset;
+      if (lifted && !hopping) { x += sx - lastScrollX; y += sy - lastScrollY; apply(); }
+      lastScrollX = sx; lastScrollY = sy;
+    }, { passive: true });
+
+    sig.addEventListener('pointerdown', function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
+      cancelAnimationFrame(raf); cancelAnimationFrame(hopRaf); clearTimeout(returnTimer);
+      hopping = false; resting = false; touching = false; lastFloorV = null;
+      readCurrent(); setLifted(true); apply();
+      var h = homeCenter();
+      gx = e.clientX - (h.x + x); gy = e.clientY - (h.y + y);
+      dragging = true; moved = 0; downT = performance.now();
+      samples = [{ t: downT, x: x, y: y }];
+      sig.setPointerCapture(e.pointerId);
+      sig.classList.add('is-held');
+      if (hint) hint.classList.add('is-gone');
+    });
+
+    sig.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var h = homeCenter();
+      var nx = e.clientX - gx - h.x, ny = e.clientY - gy - h.y;
+      moved += Math.abs(nx - x) + Math.abs(ny - y);
+      x = nx; y = ny;
+      apply();
+      var now = performance.now();
+      samples.push({ t: now, x: x, y: y });
+      while (samples.length > 2 && now - samples[0].t > 120) samples.shift();
+    });
+
+    function release() {
+      if (!dragging) return;
+      dragging = false;
+      sig.classList.remove('is-held');
+      var now = performance.now();
+
+      if (moved < 6 && now - downT < 300) {                       /* just a tap */
+        replayWrite();
+        hopHome();
+        return;
+      }
+
+      vx = 0; vy = 0;
+      var a = samples[0], b = samples[samples.length - 1];
+      var span = (b.t - a.t) / 1000;
+      if (samples.length > 1 && span > 0.005 && now - b.t < 80) {
+        vx = (b.x - a.x) / span; vy = (b.y - a.y) / span;
+        var sp = Math.sqrt(vx * vx + vy * vy);
+        if (sp > MAX_SPEED) { vx *= MAX_SPEED / sp; vy *= MAX_SPEED / sp; }
+      }
+      lastT = performance.now();
+      raf = requestAnimationFrame(step);
+    }
+    sig.addEventListener('pointerup', release);
+    sig.addEventListener('pointercancel', release);
+  })();
+</script>
+
+<script>
+  /* ---------- FAQ: animated open/close, only one open at a time ---------- */
+  (function () {
+    var items = Array.prototype.slice.call(document.querySelectorAll('.faq details'));
+    if (!items.length) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    items.forEach(function (d) {
+      var summary = d.querySelector('summary');
+      var answer = d.querySelector('.card__text');
+      if (!summary || !answer) return;
+
+      /* wrap the answer so its height can be animated */
+      var body = document.createElement('div');
+      body.className = 'faq-body';
+      answer.parentNode.insertBefore(body, answer);
+      body.appendChild(answer);
+
+      if (d.open) { d.classList.add('is-open'); body.style.height = 'auto'; body.style.opacity = '1'; }
+
+      summary.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (d.classList.contains('is-open')) close(d); else open(d);
+      });
+    });
+
+    function open(d) {
+      /* close every other one first */
+      items.forEach(function (o) { if (o !== d && o.classList.contains('is-open')) close(o); });
+
+      var body = d.querySelector('.faq-body');
+      d.open = true;
+      d.classList.add('is-open');
+      if (reduce) { body.style.height = 'auto'; return; }
+
+      body.style.height = '0px';
+      void body.offsetHeight;                       /* force reflow so the transition starts */
+      body.style.height = body.scrollHeight + 'px';
+      body.addEventListener('transitionend', function te(ev) {
+        if (ev.propertyName !== 'height') return;
+        body.removeEventListener('transitionend', te);
+        if (d.classList.contains('is-open')) body.style.height = 'auto';   /* let it resize with the window */
+      });
+    }
+
+    function close(d) {
+      var body = d.querySelector('.faq-body');
+      d.classList.remove('is-open');
+      if (reduce) { body.style.height = '0px'; d.open = false; return; }
+
+      body.style.height = body.scrollHeight + 'px'; /* from auto to a fixed number */
+      void body.offsetHeight;
+      body.style.height = '0px';
+      body.addEventListener('transitionend', function te(ev) {
+        if (ev.propertyName !== 'height') return;
+        body.removeEventListener('transitionend', te);
+        if (!d.classList.contains('is-open')) d.open = false;   /* only hide after the animation finishes */
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

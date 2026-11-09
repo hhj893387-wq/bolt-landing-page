@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>End User License Agreement · ByteBolt</title>
+  <meta name="description" content="The Bolt end user license agreement.">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/header.png" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/bolt.png">
+  <style>
+:root {
+  --bg: #000000; --surface: #0d0d0d; --surface-2: #171717; --line: #232323; --line-2: #3a3a3a;
+  --text: #ffffff; --text-2: #b5b5b5; --text-3: #787878;
+  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "VT323", "Consolas", monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.hero { position: relative; overflow: hidden; background: #000; height: clamp(350px, 46vw, 430px); isolation: isolate; }
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 80%, #000 100%); z-index: 1; pointer-events: none; }
+.hero-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; color: var(--text); display: flex; align-items: center; gap: 14px; }
+.eyebrow .upd { color: var(--text-3); }
+h1.hero-title { font-size: clamp(38px, 6.2vw, 96px); line-height: 1.08; letter-spacing: -0.035em; font-weight: 600; display: flex; flex-direction: column; align-items: flex-start; gap: 0.1em; margin-top: 4px; }
+h1.hero-title img { height: 1em; width: auto; display: block; }
+
+.dock { position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; background: color-mix(in srgb, #0d0d0d 85%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 0; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.dock a { display: inline-flex; align-items: center; justify-content: center; height: 44px; border-radius: 8px; text-decoration: none; transition: background .2s, opacity .2s, transform .15s; }
+.dock a:active { transform: scale(.97); }
+.dock-icon { width: 44px; }
+.dock-icon img { width: 20px; height: 20px; display: block; }
+.dock-new { flex: 1; min-width: 190px; padding: 0 22px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; opacity: .6; }
+.dock-new:hover { opacity: 1; }
+@media (max-width: 520px) { .dock-new { min-width: 130px; padding: 0 14px; } }
+
+.layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; padding-top: 72px; padding-bottom: 120px; align-items: start; }
+.side { position: sticky; top: 96px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none; }
+.side::-webkit-scrollbar { display: none; }
+.side-title { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 8px; }
+.side nav { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.side a { font-size: 15px; color: var(--text-3); text-decoration: none; padding: 4px 0; transition: color 0.2s; }
+.side a:hover { color: var(--text-2); }
+.side a.on { color: var(--text); }
+
+.doc { opacity: 0; transform: translateY(10px); animation: rise 0.55s var(--ease) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+.lead { color: var(--text); max-width: 62ch; font-size: 18px; line-height: 1.55; }
+.sec { padding-top: 56px; scroll-margin-top: 90px; }
+.sec:first-of-type { padding-top: 48px; }
+.body { color: var(--text); max-width: 62ch; font-size: 16px; line-height: 1.55; }
+.body h4 { font-size: 20px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3; margin-bottom: 10px; }
+.body p, .body li { color: var(--text-2); }
+.body p + p, .body p + ul, .body ul + p { margin-top: 10px; }
+.body ul { list-style: none; padding: 0; margin-top: 10px; }
+.body li { position: relative; padding-left: 18px; margin: 5px 0; }
+.body li::before { content: ""; position: absolute; left: 2px; top: 0.7em; width: 5px; height: 5px; background: var(--text-3); border-radius: 50%; }
+.body ul.sub li { padding-left: 0; }
+.body ul.sub li::before { display: none; }
+.body strong { color: var(--text); font-weight: 600; }
+.body a { text-decoration: underline; text-underline-offset: 3px; }
+.body .caps { font-size: 14px; letter-spacing: 0.01em; }
+
+.foot { border-top: 1px solid var(--line); padding: 56px 0 40px; }
+.foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+.foot-col h5 { font-family: var(--font); font-weight: 600; font-size: 15px; letter-spacing: -0.01em; color: var(--text); line-height: 1.2; margin-bottom: 10px; }
+.foot-col a { display: block; width: fit-content; font-family: var(--font); font-size: 15px; letter-spacing: -0.01em; line-height: 1.5; color: var(--text-3); text-decoration: none; padding: 2px 0; transition: color .2s; }
+.foot-col a:hover { color: var(--text); }
+.foot-bottom { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--font); font-size: 14px; color: var(--text-3); }
+@media (max-width: 700px) { .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; gap: 0; padding-top: 0; }
+  .side { position: sticky; top: 0; z-index: 20; max-height: none; overflow-x: auto; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(12px); padding: 12px 24px; margin: 0 -24px 8px; border-bottom: 1px solid var(--line); }
+  .side-title { display: none; }
+  .side nav { flex-direction: row; gap: 18px; }
+  .side a { white-space: nowrap; padding: 2px 0; }
+  .eyebrow { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .doc { opacity: 1; transform: none; }
+}
+  </style>
+</head>
+<body>
+
+<main>
+  <section class="hero">
+    <img class="hero-img" src="assets/header.png" alt="" decoding="async" fetchpriority="high" onerror="this.style.display='none'">
+    <div class="wrap hero-inner">
+      <div class="eyebrow"><span>Legal</span><span class="upd">Updated November 9, 2026</span></div>
+      <h1 class="hero-title"><span>End user license agreement of</span><img src="assets/bytebolt.svg" alt="ByteBolt"></h1>
+    </div>
+  </section>
+
+  <div class="wrap layout">
+    <aside class="side" aria-label="Jump to section">
+      <div class="side-title">Contents</div>
+      <nav id="toc">
+        <a href="#s1">1. Parties and eligibility</a>
+        <a href="#s2">2. License grant</a>
+        <a href="#s3">3. Restrictions</a>
+        <a href="#s4">4. Your responsibility</a>
+        <a href="#s5">5. No affiliation</a>
+        <a href="#s6">6. Third-party software</a>
+        <a href="#s7">7. Updates and network</a>
+        <a href="#s8">8. Privacy and statistics</a>
+        <a href="#s9">9. Ownership</a>
+        <a href="#s10">10. Disclaimer</a>
+        <a href="#s11">11. Limitation of liability</a>
+        <a href="#s12">12. Indemnification</a>
+        <a href="#s13">13. Termination</a>
+        <a href="#s14">14. Governing law</a>
+        <a href="#s15">15. Changes</a>
+        <a href="#s16">16. General</a>
+        <a href="#s17">17. Contact</a>
+      </nav>
+    </aside>
+
+    <div class="doc">
+      <p class="lead"><strong>Please read this agreement carefully.</strong> By clicking “I accept the agreement”, installing, or using Bolt, you agree to be bound by this Agreement. If you do not agree, do not install or use Bolt.</p>
+
+      <section class="sec" id="s1"><div class="body">
+        <h4>1. Parties and eligibility</h4>
+        <p>This Agreement is between you and [YOUR NAME / COMPANY NAME] (“Licensor”, “we”, “us”). You must be at least 18 years old, or the age of majority where you live. If you accept on behalf of an organization, you confirm you have authority to bind it.</p>
+      </div></section>
+
+      <section class="sec" id="s2"><div class="body">
+        <h4>2. License grant</h4>
+        <p>Subject to this Agreement, we grant you a limited, personal, non-exclusive, non-transferable, non-sublicensable, revocable license to install and use Bolt on devices you own or control. Bolt is licensed, not sold. We reserve all rights not expressly granted.</p>
+      </div></section>
+
+      <section class="sec" id="s3"><div class="body">
+        <h4>3. Restrictions</h4>
+        <p>You may not, and may not allow others to:</p>
+        <ul class="sub">
+          <li><strong>(a)</strong> copy, modify, or create derivative works of Bolt, except as permitted by law or by an open-source license that applies to a component;</li>
+          <li><strong>(b)</strong> reverse engineer, decompile, or disassemble Bolt, except to the extent applicable law permits despite this restriction;</li>
+          <li><strong>(c)</strong> sell, rent, lease, sublicense, or redistribute Bolt, or bundle it with other products, without our written permission;</li>
+          <li><strong>(d)</strong> remove or alter any copyright, license, or ownership notices;</li>
+          <li><strong>(e)</strong> use Bolt to violate any law or any person’s rights;</li>
+          <li><strong>(f)</strong> interfere with or bypass the update, licensing, or security mechanisms of Bolt.</li>
+        </ul>
+      </div></section>
+
+      <section class="sec" id="s4"><div class="body">
+        <h4>4. Your responsibility for content</h4>
+        <p>Bolt is a general-purpose tool. We do not host, provide, review, or control any video or audio you choose to download.</p>
+        <ul class="sub">
+          <li><strong>(a)</strong> You alone are responsible for the content you download and how you use it.</li>
+          <li><strong>(b)</strong> Download only content that you own, that is in the public domain or under a license that allows it, or that you otherwise have the legal right to copy. Copyright and similar laws may restrict downloading, copying, or sharing content.</li>
+          <li><strong>(c)</strong> The websites you download from have their own terms of service, which may prohibit downloading. You are responsible for complying with them.</li>
+          <li><strong>(d)</strong> You must not use Bolt to circumvent DRM or other technical protection measures, or to infringe copyright or other rights.</li>
+          <li><strong>(e)</strong> You must not use Bolt to download, store, or distribute unlawful content.</li>
+        </ul>
+        <p>We do not encourage, authorize, or condone any use of Bolt that violates law or third-party rights.</p>
+      </div></section>
+
+      <section class="sec" id="s5"><div class="body">
+        <h4>5. No affiliation</h4>
+        <p>Bolt is independent software. It is not affiliated with, endorsed by, or sponsored by YouTube, Google, X Corp., Meta, Instagram, TikTok, or any other website or company. All trademarks belong to their respective owners.</p>
+      </div></section>
+
+      <section class="sec" id="s6"><div class="body">
+        <h4>6. Third-party and open-source software</h4>
+        <p>Bolt includes or uses third-party software, including yt-dlp, FFmpeg, and Deno. Each component is licensed under its own terms, which apply to that component and are not changed by this Agreement. Nothing here limits your rights under those licenses. [Details and license texts are available at: YOUR_URL_OR_FOLDER.]</p>
+      </div></section>
+
+      <section class="sec" id="s7"><div class="body">
+        <h4>7. Updates and network connections</h4>
+        <p>Bolt may check for, download, and install updates to itself (from GitHub) and to its components, such as yt-dlp (from PyPI), automatically. Updates may add, change, or remove features and are covered by this Agreement. We have no obligation to provide updates or support. Websites change often, so Bolt may stop working with a site at any time. When Bolt connects to GitHub, PyPI, or the websites you download from, those services receive your IP address and request, and handle them under their own privacy policies.</p>
+      </div></section>
+
+      <section class="sec" id="s8"><div class="body">
+        <h4>8. Privacy and usage statistics</h4>
+        <p><strong>(a) Stored on your device.</strong> Your downloaded files, download history, settings, cache, and logs are stored locally on your device in Bolt’s data folder. We do not receive them.</p>
+        <p><strong>(b) Usage statistics.</strong> Bolt can send limited usage statistics and crash locations to a server we control (hosted by Supabase) to help us improve the software. [CHOOSE ONE: This is ON by default / This is OFF by default.] Each report contains:</p>
+        <ul>
+          <li>a random install ID created on your device, and a random session ID created each time Bolt starts. These are not linked to your name or an account, but they let us recognize reports from the same installation;</li>
+          <li>the type of event (for example: app started or closed, link checked, download started, completed, failed, or cancelled, update clicked, a setting changed);</li>
+          <li>the Bolt version, your operating system name and version, and the time of the event;</li>
+          <li>short details about the event, such as the chosen format, quality or conversion type, whether playlist, clip, subtitle, or rename features were used, which website was used (the site name or domain), how long a download took, and a general error category;</li>
+          <li>for crashes only: the error type and the name of the function and program file, and the line number, where it happened. The error message itself is never sent.</li>
+        </ul>
+        <p><strong>(c) What we do not collect.</strong> We do not collect your name, email address, or any account details. We do not collect the links (URLs) you enter, video titles, file names, or the content of anything you download. We do not record or store your IP address as part of these statistics. As with any internet connection, the server receiving the statistics can technically see the IP address of the connection, and its hosting provider may log it under its own policies. We do not use it.</p>
+        <p><strong>(d) Encryption.</strong> The details of each event are encrypted on your device before they are sent, using a public key built into Bolt. Only we hold the key needed to read them.</p>
+        <p><strong>(e) Your choice.</strong> You can turn usage statistics off at any time in Bolt’s settings. When turned off, Bolt stops recording and sending statistics and deletes any not yet sent.</p>
+        <p><strong>(f) Use and retention.</strong> We use the statistics only to understand how Bolt is used and to fix problems. We do not sell them or use them for advertising.</p>
+      </div></section>
+
+      <section class="sec" id="s9"><div class="body">
+        <h4>9. Ownership</h4>
+        <p>Bolt, including its code, design, and branding, is owned by the Licensor and protected by copyright and other laws. You get no ownership rights in Bolt. If you send us feedback, we may use it without obligation to you.</p>
+      </div></section>
+
+      <section class="sec" id="s10"><div class="body">
+        <h4>10. Disclaimer of warranties</h4>
+        <p class="caps">TO THE MAXIMUM EXTENT PERMITTED BY LAW, BOLT IS PROVIDED “AS IS” AND “AS AVAILABLE”, WITH ALL FAULTS AND WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, ACCURACY, OR UNINTERRUPTED OR ERROR-FREE OPERATION.</p>
+        <p>We do not warrant that downloads will succeed, that files will be free of errors or malware from their source, or that Bolt will work with any particular website.</p>
+      </div></section>
+
+      <section class="sec" id="s11"><div class="body">
+        <h4>11. Limitation of liability</h4>
+        <p class="caps">TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE LICENSOR WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR LOSS OF PROFITS, DATA, GOODWILL, OR BUSINESS, ARISING OUT OF OR RELATED TO BOLT OR THIS AGREEMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR TOTAL LIABILITY FOR ALL CLAIMS WILL NOT EXCEED THE AMOUNT YOU PAID FOR BOLT IN THE 12 MONTHS BEFORE THE CLAIM, OR USD 10 IF YOU PAID NOTHING.</p>
+        <p>Some places do not allow these limits, so they apply only as far as the law allows. Nothing in this Agreement excludes liability that cannot be excluded by law.</p>
+      </div></section>
+
+      <section class="sec" id="s12"><div class="body">
+        <h4>12. Indemnification</h4>
+        <p>You agree to defend, indemnify, and hold harmless the Licensor from any claims, damages, losses, and expenses (including reasonable legal fees) arising from your use of Bolt, the content you download, or your breach of this Agreement or of any law or third-party right.</p>
+      </div></section>
+
+      <section class="sec" id="s13"><div class="body">
+        <h4>13. Termination</h4>
+        <p>This Agreement lasts until terminated. You may terminate it at any time by uninstalling Bolt. We may terminate it immediately if you breach it. On termination you must stop using Bolt and delete all copies. Sections 3 to 6 and 9 to 16 survive termination.</p>
+      </div></section>
+
+      <section class="sec" id="s14"><div class="body">
+        <h4>14. Governing law and disputes</h4>
+        <p>This Agreement is governed by the laws of [COUNTRY / STATE], without regard to conflict-of-law rules. The courts of [CITY, COUNTRY] have exclusive jurisdiction, except where the law of your place of residence gives you mandatory rights to bring claims elsewhere. [OPTIONAL: Before filing a claim, the parties will try in good faith to resolve the dispute by written notice for 30 days.]</p>
+      </div></section>
+
+      <section class="sec" id="s15"><div class="body">
+        <h4>15. Changes to this agreement</h4>
+        <p>We may update this Agreement. The updated version applies when it is published or shown in a new version of Bolt. If you keep using Bolt after that, you accept the changes. If you do not agree, stop using Bolt.</p>
+      </div></section>
+
+      <section class="sec" id="s16"><div class="body">
+        <h4>16. General</h4>
+        <ul class="sub">
+          <li><strong>(a) Entire agreement:</strong> this is the full agreement about Bolt and replaces earlier understandings about it.</li>
+          <li><strong>(b) Severability:</strong> if any part is found unenforceable, the rest stays in effect and that part is enforced as far as allowed.</li>
+          <li><strong>(c) No waiver:</strong> not enforcing a right is not giving it up.</li>
+          <li><strong>(d) Assignment:</strong> you may not transfer this Agreement without our consent. We may transfer it to a successor.</li>
+          <li><strong>(e) Export and sanctions:</strong> you must follow applicable export and sanctions laws.</li>
+          <li><strong>(f) Language:</strong> the English version controls if translated.</li>
+        </ul>
+      </div></section>
+
+      <section class="sec" id="s17"><div class="body">
+        <h4>17. Contact</h4>
+        <p>Questions about this Agreement: <a href="mailto:support@bytebolt.app">support@bytebolt.app</a></p>
+        <p>Copyright © 2026 ByteBolt. All rights reserved.</p>
+      </div></section>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h5>Product</h5>
+        <a href="index.html">Home</a>
+        <a href="whatsnew.html">Changelog</a>
+      </div>
+      <div class="foot-col">
+        <h5>Resources</h5>
+        <a href="mailto:support@bytebolt.app">Help</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="eula.html">Eula</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="about.html">About Bolt</a>
+      </div>
+    </div>
+    <div class="foot-bottom">© <span id="year"></span> ByteBolt</div>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Quick links">
+  <a class="dock-icon" href="index.html" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt=""></a>
+  <a class="dock-new" href="whatsnew.html">What’s New</a>
+</nav>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+    var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var ticking = false;
+    function spy() {
+      ticking = false;
+      var cur = 0;
+      secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top <= 150) cur = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+      var on = links[cur];
+      if (on && window.matchMedia('(max-width: 860px)').matches) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(spy); }
+    }, { passive: true });
+    spy();
+  })();
+</script>
+
+</body>
+</html>
