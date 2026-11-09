@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+  
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -286,6 +287,29 @@ section.block { padding: clamp(64px, 10vh, 120px) 0; }
 .mail-link:hover { text-decoration-color: #fff; }
 .mail-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 4px; }
 
+/* ---------- Footer (same as eula.html) ---------- */
+.foot { border-top: 1px solid var(--line, #232323); padding: 56px 0 40px; }
+.foot .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+.foot-col h5 {
+  margin: 0 0 10px; font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-weight: 600; font-size: 15px; letter-spacing: -0.01em; line-height: 1.2;
+  color: var(--text, #fff);
+}
+.foot-col a {
+  display: block; width: fit-content;
+  font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 15px; letter-spacing: -0.01em; line-height: 1.5;
+  color: var(--text-3, #787878); text-decoration: none; padding: 2px 0; transition: color .2s;
+}
+.foot-col a:hover { color: var(--text, #fff); }
+.foot-bottom {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line, #232323);
+  font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 14px; color: var(--text-3, #787878);
+}
+@media (max-width: 700px) { .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* ---------- Final CTA (same layout as the landing page) ---------- */
 .cta {
   position: relative; overflow: hidden;
@@ -415,16 +439,16 @@ section.block { padding: clamp(64px, 10vh, 120px) 0; }
 <body>
 
 <nav class="navdock" aria-label="Quick links">
-  <a class="navdock-icon" href="index.html" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt=""></a>
-  <a class="navdock-new" href="whatsnew.html">What’s New</a>
+  <a class="navdock-icon" href="/" aria-label="ByteBolt home"><img src="assets/dockicon.svg" alt=""></a>
+  <a class="navdock-new" href="/whatsnew">What’s New</a>
 </nav>
-<a class="logo" href="index.html" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt"></a>
+<a class="logo" href="/" aria-label="ByteBolt home"><img src="assets/bytebolt.svg" alt="ByteBolt"></a>
 
 <!-- Download dock: stays on screen, shrinks while scrolling, grows at the final CTA section -->
 <div class="dock" aria-label="Download Bolt">
   <div class="dock__glow" aria-hidden="true"></div>
   <div class="dock__cta">
-    <a class="btn" href="thanks.html">
+    <a class="btn" href="/thanks">
       <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path fill="currentColor" d="M3 5.6 10.4 4.6v6.8H3V5.6Zm8.4-1.1L21 3v8.4h-9.6V4.5ZM3 12.6h7.4v6.8L3 18.4v-5.8Zm8.4 0H21V21l-9.6-1.4v-7Z"/>
       </svg>
@@ -439,18 +463,18 @@ section.block { padding: clamp(64px, 10vh, 120px) 0; }
         <div class="foot-cols">
           <div class="foot-col">
             <h5>Product</h5>
-            <a href="index.html">Home</a>
-            <a href="whatsnew.html">Changelog</a>
+            <a href="/">Home</a>
+            <a href="/whatsnew">Changelog</a>
           </div>
           <div class="foot-col">
             <h5>Resources</h5>
             <a href="mailto:support@bytebolt.app">Help</a>
-            <a href="privacy.html">Privacy</a>
-            <a href="eula.html">Eula</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/eula">Eula</a>
           </div>
           <div class="foot-col">
             <h5>Company</h5>
-            <a href="about.html">About Bolt</a>
+            <a href="/about">About Bolt</a>
           </div>
         </div>
         <img class="foot-brand" src="assets/bytebolt.svg" alt="ByteBolt" draggable="false">
@@ -463,7 +487,7 @@ section.block { padding: clamp(64px, 10vh, 120px) 0; }
 <header class="hero">
   <img class="hero-img" src="assets/header.png" alt="" onerror="this.style.display='none'">
   <div class="wrap hero-inner">
-    <h1 class="hero-title"><span>About</span><img src="assets/ByteBolt.png" alt="ByteBolt"></h1>
+    <h1 class="hero-title"><span>About</span><img src="assets/bytebolt.svg" alt="ByteBolt"></h1>
     <p class="hero-sub">Bolt is a modern video downloader built on a simple promise fast, free, safe and no ads.</p>
   </div>
 </header>
@@ -507,7 +531,7 @@ section.block { padding: clamp(64px, 10vh, 120px) 0; }
 
   <section class="block">
     <div class="wrap">
-      <h2 class="headline sec-head" data-reveal style="margin-bottom:clamp(20px,3vh,32px)">Who is behind <img src="assets/bytebolt.png" alt="ByteBolt"></h2>
+      <h2 class="headline sec-head" data-reveal style="margin-bottom:clamp(20px,3vh,32px)">Who is behind <img src="assets/bytebolt.svg" alt="ByteBolt"></h2>
       <h3 class="who-sub" data-reveal>Just one man</h3>
       <div class="card dev-card" data-reveal style="--d:.1s">
         <div class="dev-top">
