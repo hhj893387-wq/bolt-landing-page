@@ -72,7 +72,7 @@ i[data-icon] { display: inline-flex; font-style: normal; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  font: inherit; font-size: 14px; font-weight: 600;
+  font: inherit; font-size: 14px; font-weight: 700;
   border: 1px solid var(--text); background: var(--text); color: var(--bg);
   padding: 9px 16px; border-radius: 12px; cursor: pointer; text-decoration: none;
   transition: opacity 0.2s, background 0.2s, color 0.2s, transform 0.15s;
@@ -197,10 +197,28 @@ h1.hero-title img { height: 1em; width: auto; display: block; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.foot { border-top: 1px solid var(--line); padding: 28px 0 100px; color: var(--text-3); font-size: 13px; }
-.foot .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.foot a { text-decoration: none; }
-.foot a:hover { color: var(--text); }
+/* ---------- Footer (same as eula.html) ---------- */
+.foot { border-top: 1px solid var(--line, #232323); padding: 56px 0 40px; }
+.foot .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+.foot-col h5 {
+  margin: 0 0 10px; font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-weight: 600; font-size: 15px; letter-spacing: -0.01em; line-height: 1.2;
+  color: var(--text, #fff);
+}
+.foot-col a {
+  display: block; width: fit-content;
+  font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 15px; letter-spacing: -0.01em; line-height: 1.5;
+  color: var(--text-3, #787878); text-decoration: none; padding: 2px 0; transition: color .2s;
+}
+.foot-col a:hover { color: var(--text, #fff); }
+.foot-bottom {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line, #232323);
+  font-family: var(--font, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 14px; color: var(--text-3, #787878);
+}
+@media (max-width: 700px) { .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ---------- Admin ---------- */
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
@@ -284,7 +302,7 @@ textarea { min-height: 190px; resize: vertical; line-height: 1.5; }
   4. Public page:  yoursite.com/        Admin page:  yoursite.com/#admin
 -->
 
-<a id="dlTop" class="btn sm dl-float" href="#" hidden>Download Bolt</a>
+<a id="dlTop" class="btn sm dl-float" href="#" hidden>Download</a>
 
 <div id="publicView">
 <main>
@@ -304,12 +322,32 @@ textarea { min-height: 190px; resize: vertical; line-height: 1.5; }
   </div>
 </main>
 
+
+
 <footer class="foot">
   <div class="wrap">
-    <span>© <span id="year"></span> <span id="appName2"></span></span>
-    
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h5>Product</h5>
+        <a href="index.html">Home</a>
+        <a href="whatsnew.html">Changelog</a>
+      </div>
+      <div class="foot-col">
+        <h5>Resources</h5>
+        <a href="mailto:support@bytebolt.app">Help</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="eula.html">Eula</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="about.html">About Bolt</a>
+      </div>
+    </div>
+    <div class="foot-bottom">© <span id="year"></span> ByteBolt</div>
   </div>
 </footer>
+
+
 
 <nav class="dock" aria-label="Quick links">
   <a class="dock-icon" href="https://bytebolt.app/" target="_blank" rel="noopener noreferrer" aria-label="Open ByteBolt">
@@ -589,15 +627,43 @@ function hydrateIcons(root = document) {
   // ---- header / config ----
   const appName = cfg.APP_NAME || "Your App";
 
-  $("appName2").textContent = appName;
   $("heroName").textContent = appName;
   $("year").textContent = new Date().getFullYear();
-
-
-// Start the download in a hidden frame, then go to thanks.html
 for (const id of ["dlTop"]) {
   if (cfg.DOWNLOAD_URL) { $(id).href = cfg.DOWNLOAD_URL; $(id).hidden = false; }
 }
+
+// Start the download in a hidden frame, then go to thanks.html
+const dlBtn = $("dlTop");
+let downloading = false;
+dlBtn.addEventListener("click", (e) => {
+  if (!cfg.DOWNLOAD_URL) return;
+  e.preventDefault();                 // we start the download ourselves
+  if (downloading) return;            // ignore double clicks
+  downloading = true;
+
+  const label = dlBtn.textContent;
+  dlBtn.textContent = "Starting download…";
+  dlBtn.style.opacity = ".7";
+  dlBtn.style.pointerEvents = "none";
+
+  const frame = document.createElement("iframe");
+  frame.style.display = "none";
+  frame.src = cfg.DOWNLOAD_URL;
+  document.body.appendChild(frame);
+
+  // give the browser time to receive the file before leaving the page
+  setTimeout(() => { window.location.href = "thanks.html"; }, 2500);
+
+  // if the user comes back with the back button, reset the button
+  window.addEventListener("pageshow", () => {
+    downloading = false;
+    dlBtn.textContent = label;
+    dlBtn.style.opacity = "";
+    dlBtn.style.pointerEvents = "";
+    frame.remove();
+  }, { once: true });
+});
   const heroImg = $("heroImg");
 if (cfg.HEADER_IMAGE) {
   let tries = 0;
