@@ -92,7 +92,8 @@
       --fw-bold: 700;
 
       --ease: cubic-bezier(.22, .61, .36, 1);
-      --v2: clamp(170px, 30svh, 280px);   /* dock glow height at the final section */
+      --foot-h: 160px;                    /* space reserved for the footer inside the dock */
+      --v2: calc(clamp(170px, 30svh, 280px) + var(--foot-h));   /* dock glow height at the final section */
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -325,7 +326,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px + var(--g) * clamp(8px, 2.5svh, 28px));
+      bottom: calc(clamp(20px, 3.5svh, 36px) - var(--k) * 4px + var(--g) * (clamp(8px, 2.5svh, 28px) + var(--foot-h)));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -426,6 +427,13 @@
     .btn--dark { background: #fff; color: #000; }
     .btn--dark:hover { background: #e5e5e5; }
     .btn--dark:focus-visible { outline-color: #000; }
+
+.btn__icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
 
     /* ---------- 3. How to download (vertical tabs) ---------- */
     .how {
@@ -551,6 +559,53 @@
     }
     .cta .headline { max-width: 12em; }
 
+
+
+/* ---------- Footer inside the dock ---------- */
+.dock__foot {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: var(--foot-h);
+  padding: 0 var(--pad-x) 31px;
+  display: flex; flex-direction: column; justify-content: center; 
+  opacity: calc((var(--g) - 0.5) * 2);       /* fades in during the last half of the grow */
+}
+.foot-wrap { width: 100%; max-width: none; margin: 0; }
+.foot-top {
+  display: flex;
+  align-items: flex-start;       /* logo lines up with the "Product / Resources / Company" row */
+  justify-content: space-between;
+  gap: 32px;
+}
+.foot-brand {
+  height: clamp(28px, 3.6vw, 52px);
+  width: auto;
+  max-width: none;
+  margin-left: auto;             /* pushes it into the empty space on the right */
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .foot-top { flex-direction: column; align-items: flex-start; }
+  .foot-brand { margin-left: 0; }
+}
+.foot-cols { display: grid; grid-template-columns: repeat(3, max-content); gap: 16px clamp(82px, 18vw, 228px);  }  
+.foot-col h5 {
+  margin: 0 0 8px; font-family: var(--font-body); font-weight: var(--fw-semibold);
+  font-size: 12px; letter-spacing: -0.01em; line-height: 1.2; color: #fff;
+}
+.foot-col a {
+  display: block; width: fit-content; padding: 2px 0;
+  font-family: var(--font-body); font-weight: var(--fw-regular);
+  font-size: 12px; letter-spacing: -0.01em; line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color .2s;
+  pointer-events: none;                      /* links only work once the footer is visible */
+}
+.dock.is-end .foot-col a { pointer-events: auto; }
+.foot-col a:hover { color: #fff; }
+.foot-bottom {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 12px; color: rgba(255, 255, 255, 0.3);
+}
+
 /* ---------- Top nav dock ---------- */
 .navdock {
   position: fixed; left: 50%; top: 23px; transform: translateX(-50%); z-index: 55;
@@ -668,10 +723,46 @@
     <div class="dock__glow" aria-hidden="true"></div>
     <div class="dock__cta">
       <!-- dock button -->
-      <a class="btn btn--dark js-download" href="https://github.com/hhj893387-wq/bolt-updates/releases/download/update/Bolt-Setup.exe" rel="noopener">Download Bolt</a>
-      <p class="dock__note">Available for Windows</p>
+      <a class="btn btn--dark" href="thanks.html">
+  <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M3 5.6 10.4 4.6v6.8H3V5.6Zm8.4-1.1L21 3v8.4h-9.6V4.5ZM3 12.6h7.4v6.8L3 18.4v-5.8Zm8.4 0H21V21l-9.6-1.4v-7Z"/>
+  </svg>
+  <span>Download Bolt</span>
+</a>
+      <p class="dock__note"></p>
     </div>
+
+<footer class="dock__foot">
+  <div class="foot-wrap">
+
+    <div class="foot-top">
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="#top">Home</a>
+          <a href="whatsnew.html">Changelog</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="mailto:support@bytebolt.app">Help</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="eula.html">Eula</a>
+        </div>
+        <div class="foot-col">
+          <h5>Company</h5>
+          <a href="about.html">About Bolt</a>
+        </div>
+      </div>
+
+      <!-- logo is a sibling of .foot-cols, NOT inside it -->
+      <img class="foot-brand" src="assets/bytebolt.svg" alt="ByteBolt" draggable="false">
+    </div>
+
+    <div class="foot-bottom">© <span id="year"></span> ByteBolt</div>
+
   </div>
+</footer>
+</div> <!-- closes .dock -->
 
   <main id="top">
 
@@ -789,7 +880,8 @@
 
     </section>
 
-  </main>
+
+
 
   <script>
     (function () {
@@ -982,7 +1074,8 @@
       var bar = document.querySelector('.progress');
       var logo = document.querySelector('.logo');
       var dock = document.querySelector('.dock');
-      var ctaSection = document.getElementById('download');
+      var ctaHeadline = document.querySelector('#download .headline');
+      document.getElementById('year').textContent = new Date().getFullYear();
       var ticking = false;
 
       function smooth(t) {
@@ -1000,17 +1093,23 @@
         updateHowScroll();
 
         /* small logo stays hidden while the hero (with its big Bolt) is on screen */
-        if (logo) logo.classList.toggle('is-hidden', sections[0].getBoundingClientRect().bottom > vh * 0.35);
+/* dock progress (computed first so the logo can use it) */
+var k = smooth(y / (vh * 0.6));
+var remaining = docH - y;
+var g = smooth(1 - remaining / (vh * 0.9));
 
-        /* download dock: shrinks while scrolling, then grows taller (never fades)
-           as the final CTA section slides in */
-        if (dock) {
-          var k = smooth(y / (vh * 0.6));
-          var ctaTop = ctaSection.getBoundingClientRect().top;
-          var g = smooth((vh * 0.9 - ctaTop) / (vh * 0.4));   /* 0 while CTA is far away, 1 once it fills the screen */
-          dock.style.setProperty('--k', (k * (1 - g)).toFixed(3));
-          dock.style.setProperty('--g', g.toFixed(3));
-        }
+/* logo hidden while the hero is on screen OR once the dock/footer is reached */
+if (logo) {
+  var inHero = sections[0].getBoundingClientRect().bottom > vh * 0.35;
+  logo.classList.toggle('is-hidden', inHero || g > 0.05);
+}
+
+/* download dock */
+if (dock) {
+  dock.style.setProperty('--k', (k * (1 - g)).toFixed(3));
+  dock.style.setProperty('--g', g.toFixed(3));
+  dock.classList.toggle('is-end', g > 0.9);
+}
 
         /* f[i] = how far the viewport middle has crossed the boundary after section i */
         var mid = vh * 0.5;
