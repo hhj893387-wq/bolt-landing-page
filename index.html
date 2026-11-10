@@ -62,7 +62,7 @@
   <script>document.documentElement.classList.add('js');</script>
 
 <script>
-  if (/^#(\/|v\/|admin)/.test(location.hash)) location.replace('whatsnew.html' + location.hash);
+  if (/^#(\/|v\/|admin)/.test(location.hash)) location.replace('/whatsnew' + location.hash);
 </script>
 
   <style>
@@ -748,7 +748,7 @@
         <div class="foot-col">
           <h5>Product</h5>
           <a href="#top">Home</a>
-          <a href="whatsnew.html">Changelog</a>
+          <a href="/whatsnew">Changelog</a>
         </div>
         <div class="foot-col">
           <h5>Resources</h5>
@@ -921,7 +921,7 @@
 
           // give the browser time to receive the file before leaving the page
           window.setTimeout(function () {
-            window.location.href = 'thanks.html';
+            window.location.href = '/thanks';
           }, 2500);
 
           // safety: if the user comes back with the back button, reset the button
@@ -1170,7 +1170,7 @@ if (dock) {
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (rows) {
         if (rows && rows[0] && rows[0].version) {
-          link.href = "whatsnew.html#v/" + encodeURIComponent(rows[0].version);
+          link.href = "/whatsnew#v/" + encodeURIComponent(rows[0].version);
         }
       })
       .catch(function () {});
