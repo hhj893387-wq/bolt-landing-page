@@ -1,0 +1,21 @@
+# ByteBolt
+
+> ByteBolt (also called Bolt) is a free video downloader for PC. Paste a link, choose a quality up to 8K, and save videos or audio from 1800+ websites. It has no ads, no subscriptions and no hidden data collection. It is built and maintained by one developer.
+
+## Key facts
+
+- Platform: PC
+- Price: free
+- Supported sites: 1800+ (social media sites, video sites and pages with embedded video)
+- Quality: up to 16K, depending on what the source video offers
+- Output formats: MP4, MP3, MOV, WebM, AVI, WMV, AVCHD, FLV and more
+- Extra features: trim before download, download audio only, download captions in any language, download playlists donwload channels bulk download included
+- Support: support@bytebolt.app
+
+## Pages
+
+- [Home](https://bytebolt.app/): what ByteBolt does, features, and how to download a video in 3 steps
+- [About](https://bytebolt.app/about): the goal of the project, who built it, and a FAQ (is it free, is it safe, supported sites, bug reports)
+- [Release notes](https://bytebolt.app/whatsnew): changelog with every version
+- [Privacy](https://bytebolt.app/privacy): privacy policy
+- [EULA](https://bytebolt.app/eula): license terms
