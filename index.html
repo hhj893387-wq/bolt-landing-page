@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ByteBolt</title>
+  <title>ByteBolt – Free Video Downloader for Windows (8K, MP3, 1800+ Sites)</title>
 <meta name="description" content="ByteBolt is a fast video downloader for Windows. Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
 <link rel="canonical" href="https://bytebolt.app/">
 <!-- Google tag (gtag.js) -->
@@ -23,7 +23,7 @@
 <meta property="og:title" content="ByteBolt – Download Any Video From Anywhere">
 <meta property="og:description" content="Paste a link, choose your quality, download. Fast, no limits.">
 <meta property="og:url" content="https://bytebolt.app/">
-<meta property="og:image" content="https://bytebolt.app/assets/og.png">
+<meta property="og:image" content="https://bytebolt.app/assets/ByteBolt.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +37,18 @@
   "url": "https://bytebolt.app/",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Windows",
-  "description": "Fast video downloader.",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Free video downloader for PC. Paste a link, choose quality up to 8K, and save videos or audio from 1800+ websites. No ads.",
+  "downloadUrl": "https://bytebolt.app/thanks",
+  "image": "https://bytebolt.app/assets/ByteBolt.png",
+  "isAccessibleForFree": true,
+  "featureList": [
+  "Download videos up to 8K",
+  "Convert to MP4, MP3, MOV, WebM and more",
+  "Trim video before download",
+  "Download audio, captions and playlists and channels",
+  "1800+ supported websites"
+],
+"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
 </script>
 
@@ -263,6 +273,14 @@
     }
     .hero__title .pixel { font-size: var(--fs-pixel-hero); }
     .hero__title .pixel--dot { font-size: var(--fs-pixel-dot); line-height: 0; }
+    .hero__sub {
+      max-width: 42rem;
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, .68);
+      font-size: clamp(14px, 1.2vw, 17px);
+      line-height: 1.6;
+      text-align: center;
+    }
 
     /* big wordmark, partly hidden behind the video */
     .hero__mark {
@@ -780,8 +798,9 @@
         <h1 class="hero__title" data-reveal>
           Download any video from <span class="pixel">anywhere</span><span class="pixel pixel--dot">.</span>
         </h1>
+        <p class="hero__sub">Free video downloader for Windows. Paste a link, pick up to 8K, save as MP4 or MP3.</p>
 
-        <div class="hero__mark" aria-hidden="true"><img src="assets/.svg" alt="" draggable="false"></div>
+        <div class="hero__mark" aria-hidden="true"><img src="assets/bytebolt.png" alt="" draggable="false"></div>
 
         <!-- Put your video at assets/demo.mp4 (muted, loops, plays when visible) -->
         <div class="hero__video" data-reveal="scale" style="--d:.15s">
