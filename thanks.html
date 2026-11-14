@@ -117,10 +117,35 @@
 
   
   <script>
-    // Auto-start the download when the page opens
     (function () {
       var link = document.getElementById("manual");
+      var status = document.getElementById("dl-status");
       if (!link) return;
+
+      // Was this page refreshed or opened with back/forward?
+      var navType = "navigate";
+      try {
+        var nav = performance.getEntriesByType("navigation")[0];
+        if (nav && nav.type) navType = nav.type;
+      } catch (e) {}
+      var isRevisit = navType === "reload" || navType === "back_forward";
+
+      if (isRevisit) {
+        // Refresh: no download, no tracking. Just show the manual link.
+        if (status) status.innerHTML = 'Need the file again? Click <a href="' + link.href + '" download style="color:#fff;font-weight:500;text-decoration:none">here</a> to download.';
+        return;
+      }
+
+      // Count once: skip if the button on index.html already did
+      var counted = false;
+      try { counted = sessionStorage.getItem("dl_counted") === "1"; } catch (e) {}
+      if (!counted) {
+        if (window.gtag) gtag("event", "download", { method: "direct" });
+      }
+      // the flag is only for the hand-off from index.html, so clear it
+      try { sessionStorage.removeItem("dl_counted"); } catch (e) {}
+
+      // Fresh visit: start the download
       setTimeout(function () {
         var a = document.createElement("a");
         a.href = link.href;
