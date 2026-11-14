@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ByteBolt – Free Video Downloader for Windows (8K, MP3, 1800+ Sites)</title>
-<meta name="description" content="ByteBolt is a fast video downloader for Desktop Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
+  <title>ByteBolt – Free Video Downloader for Desktop (8K, MP3, 1800+ Sites)</title>
+<meta name="description" content="ByteBolt is a fast video downloader for PC. Paste a link, pick your quality up to 8K, and save videos from social media and video sites in seconds.">
 <link rel="canonical" href="https://bytebolt.app/">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-C37LS4KTB9"></script>
@@ -37,7 +37,7 @@
   "url": "https://bytebolt.app/",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Windows",
-  "description": "Free for ever video downloader for PC. Paste a link, choose quality up to 8K, and save videos or audio from 1800+ websites. No ads.",
+  "description": "Free video downloader for PC. Paste a link, choose quality up to 8K, and save videos or audio from 1800+ websites. No ads.",
   "downloadUrl": "https://bytebolt.app/thanks",
   "image": "https://bytebolt.app/assets/ByteBolt.png",
   "isAccessibleForFree": true,
@@ -709,16 +709,16 @@
     var assets = new Promise(function (resolve) {
       function collect() {
         var jobs = [];
-        Array.prototype.forEach.call(document.querySelectorAll('img'), function (i) { jobs.push(imgDone(i)); });
-        Array.prototype.forEach.call(document.querySelectorAll('video'), function (v) { jobs.push(videoDone(v)); });
-        if (document.fonts && document.fonts.ready) jobs.push(document.fonts.ready);
-        Promise.all(jobs).then(resolve);
+// only wait for the hero background, not every screenshot or the video
+var hero = document.querySelector('.bg-hero');
+if (hero) jobs.push(imgDone(hero));
+Promise.all(jobs).then(resolve);
       }
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', collect);
       else collect();
     });
 
-    var timeout = new Promise(function (r) { setTimeout(r, 10000); });   // safety: never get stuck
+    var timeout = new Promise(function (r) { setTimeout(r, 2500); });   // safety: never get stuck
 
     // other scripts wait on this before starting their reveal animations
     window.__ready = Promise.race([assets, timeout]).then(function () {
@@ -798,8 +798,9 @@
         <h1 class="hero__title" data-reveal>
           Download any video from <span class="pixel">anywhere</span><span class="pixel pixel--dot">.</span>
         </h1>
+        <p class="hero__sub">Free video downloader for Windows. Paste a link, pick up to 8K, save as MP4 or MP3.</p>
 
-        <div class="hero__mark" aria-hidden="true"><img src="assets/bytebolt.svg" alt="" draggable="false"></div>
+        <div class="hero__mark" aria-hidden="true"><img src="assets/bytebolt.png" alt="" draggable="false"></div>
 
         <!-- Put your video at assets/demo.mp4 (muted, loops, plays when visible) -->
         <div class="hero__video" data-reveal="scale" style="--d:.15s">
@@ -1194,5 +1195,27 @@ if (dock) {
       .catch(function () {});
   })();
 </script>
+
+<script>
+(function () {
+  // 1. Count every click on a download button
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href="/thanks"]');
+  if (!a) return;
+  try { sessionStorage.setItem('dl_counted', '1'); } catch (err) {}
+  if (window.gtag) gtag('event', 'download', {
+    method: 'button',
+    transport_type: 'beacon'   // still sends even though the page navigates away
+  });
+});
+
+  // 2. Phone/Mac visitors can't run the .exe, so say so
+  var note = document.getElementById('dock-note');
+  if (note && !/Windows/i.test(navigator.userAgent)) {
+    note.textContent = 'Windows only · open this page on your PC';
+  }
+})();
+</script>
+
 </body>
 </html>
